@@ -10,7 +10,7 @@ import {
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 export default function Component() {
@@ -65,6 +65,13 @@ export default function Component() {
       });
   };
 
+  const { status } = useSession();
+
+  if (status === "authenticated") {
+    router.push("/dashboard");
+    return <></>;
+  }
+
   return (
     <Container size={420} my={100}>
       <Title
@@ -92,7 +99,10 @@ export default function Component() {
             required
             {...form.getInputProps("password")}
           />
-          <Group position="right" mt="md">
+          <Group position="apart" mt="md">
+            <Button type="button" color="dark" onClick={() => router.back()}>
+              Back To Home
+            </Button>
             <Button type="submit" color="dark">
               Login
             </Button>
