@@ -4,12 +4,12 @@ import Transaction from "../../models/transaction";
 import { authOptions } from "./auth/[...nextauth]";
 
 const handler = async (req, res) => {
-  // const session = await getServerSession(req, res, authOptions);
-  // if (!session) {
-  //   return res
-  //     .status(401)
-  //     .json({ error: true, message: "You are unauthorized!" });
-  // }
+  const session = await getServerSession(req, res, authOptions);
+  if (!session.user.isAdmin) {
+    return res
+      .status(401)
+      .json({ error: true, message: "You are unauthorized!" });
+  }
   if (req.method === "POST") {
     try {
       // var transactions = await Transaction.find(req.body.filters);
