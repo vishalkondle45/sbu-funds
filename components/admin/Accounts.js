@@ -9,6 +9,7 @@ import {
   Group,
   LoadingOverlay,
   Menu,
+  Text,
   rem,
 } from "@mantine/core";
 import { useRouter } from "next/router";
@@ -21,8 +22,11 @@ export default function Accounts() {
   const router = useRouter();
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
+  const [balances, setBalances] = useState([]);
   const getAccounts = async () => {
     handlers.open();
+    const { data: data1 } = await axios.get(`/api/balance`);
+    setBalances(data1.data);
     const { data } = await axios.post(`/api/accounts`, {
       filters: router.query,
     });
@@ -33,43 +37,56 @@ export default function Accounts() {
     if (router.query) getAccounts();
   }, [router.query]);
 
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "account_number",
-        header: "Account Number",
-        size: 50,
-      },
-      {
-        accessorKey: "name",
-        header: "Customer Name",
-        size: 50,
-      },
-      {
-        accessorKey: "account_type",
-        header: "Account Type",
-        size: 50,
-      },
-      {
-        accessorKey: "comments",
-        header: "Comments",
-        size: 50,
-      },
-      {
-        accessorKey: "Created At",
-        header: "createdAt",
-        Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY"),
-        size: 50,
-      },
-      {
-        accessorKey: "Updated At",
-        header: "updatedAt",
-        Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY"),
-        size: 50,
-      },
-    ],
-    []
-  );
+  const getBalance = (account_number) =>
+    balances.find((obj) => obj._id === account_number)?.balance || 0;
+
+  const columns = [
+    {
+      accessorKey: "account_number",
+      header: "Account Number",
+      size: 50,
+    },
+    {
+      accessorKey: "name",
+      header: "Customer Name",
+      size: 50,
+    },
+    {
+      accessorKey: "account_type",
+      header: "Account Type",
+      size: 50,
+    },
+    {
+      accessorKey: "account_number",
+      header: "Balance",
+      Cell: ({ cell }) => (
+        <Text
+          color={getBalance(cell.getValue()) < 0 ? "red" : "green"}
+          fw={700}
+        >
+          ₹ {getBalance(cell.getValue()).toFixed(2)}
+        </Text>
+      ),
+      size: 50,
+    },
+    {
+      accessorKey: "comments",
+      header: "Comments",
+      size: 50,
+    },
+    {
+      accessorKey: "Created At",
+      header: "createdAt",
+      Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY"),
+      size: 50,
+    },
+    {
+      accessorKey: "Updated At",
+      header: "updatedAt",
+      Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY"),
+      size: 50,
+    },
+  ];
 
   const deleteAccount = async (id) => {
     handlers.open();

@@ -32,9 +32,19 @@ const handler = async (req, res) => {
           },
         },
         { $unwind: "$customers" },
+        // {
+        //   $lookup: {
+        //     from: "transactions",
+        //     localField: "account_number",
+        //     foreignField: "account_number",
+        //     as: "transactions",
+        //   },
+        // },
+        // { $unwind: "$transactions" },
         {
           $project: {
             name: "$customers.name",
+            // transaction: "$transactions.account_number",
             account_number: 1,
             customer_id: 1,
             account_type: 1,
