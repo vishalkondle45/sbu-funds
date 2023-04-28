@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createStyles,
   Header,
@@ -9,9 +9,20 @@ import {
   Transition,
   rem,
   Image,
+  Button,
+  Anchor,
+  Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
+import {
+  IconCoinRupee,
+  IconHome2,
+  IconPigMoney,
+  IconUserCircle,
+} from "@tabler/icons-react";
+import { IconLogout } from "@tabler/icons-react";
 
 const HEADER_HEIGHT = rem(60);
 
@@ -97,8 +108,29 @@ const useStyles = createStyles((theme) => ({
 export default function HeaderComponent({
   links = [
     {
-      link: "/login",
-      label: "Login",
+      link: "/admin/home",
+      label: "Home",
+      icon: <IconHome2 />,
+    },
+    {
+      link: "/admin/customers",
+      label: "Customers",
+      icon: <IconUserCircle />,
+    },
+    {
+      link: "/admin/accounts",
+      label: "Accounts",
+      icon: <IconPigMoney />,
+    },
+    {
+      link: "/admin/transactions",
+      label: "Transactions",
+      icon: <IconCoinRupee />,
+    },
+    {
+      link: "/admin/logout",
+      label: "Logout",
+      icon: <IconLogout />,
     },
   ],
 }) {
@@ -106,13 +138,19 @@ export default function HeaderComponent({
   const [active, setActive] = useState(links[0].link);
   const { classes, cx } = useStyles();
   const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // setActive()
+    setActive(pathname);
+  }, []);
 
   const items = links.map((link) => (
-    <a
+    <Button
       key={link.label}
-      href={link.link}
+      // href={link.link}
       className={cx(classes.link, {
-        [classes.linkActive]: active === link.link,
+        [classes.linkActive]: active?.includes(link.link),
       })}
       onClick={(event) => {
         event.preventDefault();
@@ -120,16 +158,18 @@ export default function HeaderComponent({
         router.push(link.link);
         close();
       }}
+      variant="white"
+      leftIcon={link.icon}
     >
       {link.label}
-    </a>
+    </Button>
   ));
 
   return (
-    <Header height={HEADER_HEIGHT} mb={60} className={classes.root}>
+    <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
       <Container className={classes.header}>
         {/* <MantineLogo size={28} /> */}
-        <Image src="./SBU-Final.png" width={100} />
+        <Image src="../../../SBU-Final.png" width={100} />
         <Group spacing={5} className={classes.links}>
           {items}
         </Group>

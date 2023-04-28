@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var transactionSchema = new Schema(
   {
-    id: {
+    transaction_id: {
       type: Number,
       required: true,
     },
@@ -11,14 +11,25 @@ var transactionSchema = new Schema(
       type: Number,
       required: true,
     },
-    account_type: {
-      type: String,
+    account_number: {
+      type: Number,
       required: true,
     },
-    // balance: {
-    //   type: Number,
-    //   required: true,
-    // },
+    amount: {
+      type: Number,
+      required: true,
+    },
+    transaction_type: {
+      type: String,
+      required: true,
+      default: "Cash",
+      enum: ["Cash", "Cheque"],
+    },
+    balance: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     comments: {
       type: String,
       required: false,

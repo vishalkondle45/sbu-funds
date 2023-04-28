@@ -6,20 +6,34 @@ var customerSchema = new Schema(
     id: {
       type: Number,
       required: true,
+      unique: true,
+      default: 0,
     },
     name: {
       type: String,
       required: true,
     },
     pan: {
-      type: Number,
+      type: String,
+      required: true,
+      minlength: 10,
+      maxlength: 10,
+      unique: true,
+    },
+    dob: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    aadhar: {
+      type: String,
       required: true,
       minlength: 12,
       maxlength: 12,
       unique: true,
     },
     mobile: {
-      type: Number,
+      type: String,
       required: true,
       minlength: 10,
       maxlength: 10,
@@ -27,6 +41,7 @@ var customerSchema = new Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -36,13 +51,6 @@ var customerSchema = new Schema(
       type: String,
       required: true,
     },
-    aadhar: {
-      type: Number,
-      required: true,
-      minlength: 12,
-      maxlength: 12,
-      unique: true,
-    },
     nominee: {
       type: String,
       required: true,
@@ -50,10 +58,20 @@ var customerSchema = new Schema(
     relation: {
       type: String,
       required: true,
+      // enum: ["Mother", "Father", "Sister", "Brother", "Husband"],
+    },
+    shares: {
+      type: Number,
+      required: true,
     },
     comments: {
       type: String,
       required: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   { timestamps: true }

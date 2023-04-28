@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var accountSchema = new Schema(
   {
-    number: {
+    account_number: {
       type: Number,
       required: true,
     },
@@ -14,12 +14,14 @@ var accountSchema = new Schema(
     account_type: {
       type: String,
       required: true,
+      enum: [
+        "Savings Account",
+        "Loan Account",
+        "Fixed Deposit",
+        "Recurring Deposit",
+      ],
+      default: "Savings Account",
     },
-    // balance: {
-    //   type: Number,
-    //   required: true,
-    // },
-
     comments: {
       type: String,
       required: false,

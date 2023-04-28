@@ -2,7 +2,8 @@ import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
 import { SessionProvider } from "next-auth/react";
 import { Notifications } from "@mantine/notifications";
-// import image from "@/public/SB"
+import { ModalsProvider } from "@mantine/modals";
+import "../styles/globals.css";
 
 export default function App({
   Component,
@@ -24,11 +25,14 @@ export default function App({
         theme={{
           /** Put your mantine theme override here */
           colorScheme: "light",
+          primaryColor: "red",
         }}
       >
         <SessionProvider session={session}>
           <Notifications />
-          <Component {...pageProps} />
+          <ModalsProvider>
+            <Component {...pageProps} />
+          </ModalsProvider>
         </SessionProvider>
       </MantineProvider>
     </>

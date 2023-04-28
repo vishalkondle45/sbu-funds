@@ -10,7 +10,7 @@ import {
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 export default function Component() {
@@ -65,12 +65,12 @@ export default function Component() {
       });
   };
 
-  const { status } = useSession();
+  // const { status } = useSession();
 
-  if (status === "authenticated") {
-    router.push("/dashboard");
-    return <></>;
-  }
+  // if (status === "authenticated") {
+  //   router.push("/dashboard");
+  //   return <></>;
+  // }
 
   return (
     <Container size={420} my={100}>
@@ -102,6 +102,9 @@ export default function Component() {
           <Group position="apart" mt="md">
             <Button type="button" color="dark" onClick={() => router.back()}>
               Back To Home
+            </Button>
+            <Button type="button" color="dark" onClick={() => signOut()}>
+              signOut
             </Button>
             <Button type="submit" color="dark">
               Login
