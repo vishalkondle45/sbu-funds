@@ -7,9 +7,5 @@ export default function Component() {
   useEffect(() => {
     router.push("/admin/home");
   }, []);
-  return (
-    <>
-      <HeaderComponent />
-    </>
-  );
+  return <></>;
 }

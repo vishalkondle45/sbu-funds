@@ -16,6 +16,7 @@ import {
   IconReportMoney,
 } from "@tabler/icons-react";
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const icons = {
@@ -30,10 +31,12 @@ const icons = {
 
 export default function Home() {
   const [data, setData] = useState([]);
+  const router = useRouter();
   useEffect(() => {
     const getHome = async () => {
-      const { data: data1 } = await axios.get("/api/home");
-      setData(data1.data);
+      await axios.get("/api/home").then((response) => {
+        setData(response.data.data);
+      });
     };
     getHome();
   }, []);

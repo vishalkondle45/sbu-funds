@@ -23,6 +23,7 @@ import {
   IconUserCircle,
 } from "@tabler/icons-react";
 import { IconLogout } from "@tabler/icons-react";
+import { signOut, useSession } from "next-auth/react";
 
 const HEADER_HEIGHT = rem(60);
 
@@ -127,11 +128,6 @@ export default function HeaderComponent({
       label: "Transactions",
       icon: <IconCoinRupee />,
     },
-    {
-      link: "/admin/logout",
-      label: "Logout",
-      icon: <IconLogout />,
-    },
   ],
 }) {
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -139,6 +135,17 @@ export default function HeaderComponent({
   const { classes, cx } = useStyles();
   const router = useRouter();
   const pathname = usePathname();
+  const { status, data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      if (!session.user.isAdmin) {
+        router.push("/");
+      }
+    } else {
+      router.push("/");
+    }
+  }, []);
 
   useEffect(() => {
     // setActive()
@@ -172,6 +179,23 @@ export default function HeaderComponent({
         <Image src="../../../SBU-Final.png" width={100} />
         <Group spacing={5} className={classes.links}>
           {items}
+          <Button
+            key={"logout"}
+            className={cx(classes.link, {
+              [classes.linkActive]: active?.includes("/logout"),
+            })}
+            onClick={(event) => {
+              event.preventDefault();
+              setActive("");
+              signOut();
+              router.push("/");
+              close();
+            }}
+            variant="white"
+            leftIcon={<IconLogout />}
+          >
+            Logout
+          </Button>
         </Group>
 
         <Burger

@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
-  if (!session.user.isAdmin) {
+  if (!session?.user?.isAdmin) {
     return res
       .status(401)
       .json({ error: true, message: "You are unauthorized!" });
