@@ -56,6 +56,7 @@ export default function AccountNew({ id }) {
           icon: <IconCheck size="1.2rem" />,
           color: "green",
         });
+        router.push("/admin/accounts");
       })
       .catch((error) => {
         notifications.show({

@@ -37,13 +37,13 @@ export default function Accounts() {
     if (router.query) getAccounts();
   }, [router.query]);
 
-  const getBalance = (account_number) =>
-    balances.find((obj) => obj._id === account_number)?.balance || 0;
+  // const getBalance = (account_number) =>
+  //   balances.find((obj) => obj._id === account_number)?.balance || 0;
 
   const columns = [
     {
       accessorKey: "account_number",
-      header: "Account Number",
+      header: "Acc No.",
       size: 50,
     },
     {
@@ -53,20 +53,7 @@ export default function Accounts() {
     },
     {
       accessorKey: "account_type",
-      header: "Account Type",
-      size: 50,
-    },
-    {
-      accessorKey: "account_number",
-      header: "Balance",
-      Cell: ({ cell }) => (
-        <Text
-          color={getBalance(cell.getValue()) < 0 ? "red" : "green"}
-          fw={700}
-        >
-          ₹ {getBalance(cell.getValue()).toFixed(2)}
-        </Text>
-      ),
+      header: "Acc. Type",
       size: 50,
     },
     {

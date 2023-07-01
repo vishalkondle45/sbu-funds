@@ -1,29 +1,33 @@
 import { getServerSession } from "next-auth";
 import connectDB from "../../middleware/mongodb";
-import Transaction from "../../models/transaction";
+import Account from "../../models/account";
 import { authOptions } from "./auth/[...nextauth]";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
-  if (!session?.user?.isAdmin) {
+  if (!session) {
     return res
       .status(401)
       .json({ error: true, message: "You are unauthorized!" });
   }
   if (req.method === "GET") {
     try {
-      const [{ amount: plus }] = await Transaction.aggregate([
-        { $match: { from: "" } },
-        { $group: { _id: null, amount: { $sum: "$amount" } } },
-      ]);
-      const [{ amount: minus }] = await Transaction.aggregate([
-        { $match: { to: "" } },
-        { $group: { _id: null, amount: { $sum: "$amount" } } },
-      ]);
+      var accounts = await Account.find({
+        customer_id: session.user.id,
+      }).select("account_number");
+      if (accounts.length == 0) {
+        return res.status(200).json({
+          error: false,
+          ok: true,
+          data: [],
+          message: "Balance fetched successfully",
+        });
+      }
+      accounts = accounts.map(({ account_number }) => account_number);
       return res.status(200).json({
         error: false,
         ok: true,
-        data: plus - minus,
+        data: accounts,
         message: "Accounts fetched successfully",
       });
     } catch (error) {

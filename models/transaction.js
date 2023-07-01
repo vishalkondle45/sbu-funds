@@ -7,13 +7,13 @@ var transactionSchema = new Schema(
       type: Number,
       required: true,
     },
-    customer_id: {
-      type: Number,
-      required: true,
+    from: {
+      default: null,
+      type: String,
     },
-    account_number: {
-      type: Number,
-      required: true,
+    to: {
+      default: null,
+      type: String,
     },
     amount: {
       type: Number,
@@ -23,11 +23,14 @@ var transactionSchema = new Schema(
       type: String,
       required: true,
       default: "Cash",
-      enum: ["Cash", "Cheque"],
+      enum: ["Cash", "Transfer", "Cheque", "NEFT", "RTGS"],
     },
-    balance: {
+    from_balance: {
       type: Number,
-      required: true,
+      default: 0,
+    },
+    to_balance: {
+      type: Number,
       default: 0,
     },
     comments: {

@@ -74,6 +74,7 @@ export default function CustomerNew({ id }) {
           icon: <IconCheck size="1.2rem" />,
           color: "green",
         });
+        router.push("/admin/customers");
       })
       .catch((error) => {
         notifications.show({

@@ -15,7 +15,8 @@ const handler = async (req, res) => {
       // var accounts = await Account.find(req.body.filters);
       let obj = {};
       for (const property in req.body.filters) {
-        obj[property] = Number(req.body.filters[property]);
+        obj[property] =
+          Number(req.body.filters[property]) || req.body.filters[property];
       }
       var accounts = await Account.aggregate([
         {
@@ -72,9 +73,7 @@ const handler = async (req, res) => {
   }
   if (req.method === "GET") {
     try {
-      var accounts = await Account.find({ customer_id: req.query.id }).select(
-        "account_number account_type"
-      );
+      var accounts = await Account.find().select("account_number account_type");
       accounts = accounts.map(({ _id, account_number, account_type }) => ({
         label: account_number + " - " + account_type,
         value: account_number,

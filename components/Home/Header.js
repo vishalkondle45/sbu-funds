@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createStyles,
   Header,
@@ -9,9 +9,18 @@ import {
   Transition,
   rem,
   Image,
+  Button,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/router";
+import {
+  IconCoinRupee,
+  IconHome,
+  IconLogout,
+  IconUser,
+} from "@tabler/icons-react";
+import { signOut, useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 const HEADER_HEIGHT = rem(60);
 
@@ -94,18 +103,25 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export default function HeaderComponent({
-  links = [
+export default function HeaderComponent() {
+  const links = [
     {
       link: "/login",
       label: "Login",
     },
-  ],
-}) {
+  ];
+
   const [opened, { toggle, close }] = useDisclosure(false);
   const [active, setActive] = useState(links[0].link);
   const { classes, cx } = useStyles();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setActive(pathname);
+  }, []);
 
   const items = links.map((link) => (
     <a
@@ -125,13 +141,69 @@ export default function HeaderComponent({
     </a>
   ));
 
+  const links1 = [
+    {
+      link: "/",
+      label: "Dashboard",
+      icon: <IconHome />,
+    },
+    {
+      link: "/transactions",
+      label: "My Transactions",
+      icon: <IconCoinRupee />,
+    },
+    {
+      link: "/account",
+      label: "My Account",
+      icon: <IconUser />,
+    },
+  ];
+  const items1 = links1.map((link) => (
+    <Button
+      key={link.label}
+      className={cx(classes.link, {
+        [classes.linkActive]: active === link.link,
+      })}
+      onClick={(event) => {
+        event.preventDefault();
+        setActive(link.link);
+        router.push(link.link);
+        close();
+      }}
+      variant="white"
+      leftIcon={link.icon}
+    >
+      {link.label}
+    </Button>
+  ));
+
   return (
-    <Header height={HEADER_HEIGHT} mb={60} className={classes.root}>
+    <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
       <Container className={classes.header}>
         {/* <MantineLogo size={28} /> */}
         <Image src="./SBU-Final.png" width={100} />
         <Group spacing={5} className={classes.links}>
-          {items}
+          {session ? (
+            <>
+              {items1}
+              <Button
+                className={cx(classes.link, {
+                  [classes.linkActive]: active?.includes("/logout"),
+                })}
+                onClick={(event) => {
+                  event.preventDefault();
+                  signOut();
+                  router.push("/login");
+                }}
+                variant="white"
+                leftIcon={<IconLogout />}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            items
+          )}
         </Group>
 
         <Burger
@@ -144,7 +216,27 @@ export default function HeaderComponent({
         <Transition transition="pop-top-right" duration={200} mounted={opened}>
           {(styles) => (
             <Paper className={classes.dropdown} withBorder style={styles}>
-              {items}
+              {session ? (
+                <>
+                  {items1}
+                  <Button
+                    className={cx(classes.link, {
+                      [classes.linkActive]: active?.includes("/logout"),
+                    })}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      signOut();
+                      router.push("/login");
+                    }}
+                    variant="white"
+                    leftIcon={<IconLogout />}
+                  >
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                items
+              )}
             </Paper>
           )}
         </Transition>

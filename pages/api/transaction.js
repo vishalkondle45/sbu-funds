@@ -12,23 +12,68 @@ const handler = async (req, res) => {
   }
   if (req.method === "POST") {
     try {
-      var transactions = await Trasaction.find({
-        account_number: req.body.account_number,
+      var [fromLastTransaction] = await Trasaction.find({
+        $or: [{ from: req.body.from }, { to: req.body.from }],
       })
         .sort({ _id: -1 })
         .limit(1);
+
+      var [toLastTransaction] = await Trasaction.find({
+        $or: [{ from: req.body.to }, { to: req.body.to }],
+      })
+        .sort({ _id: -1 })
+        .limit(1);
+
+      let from_balance = null;
+      if (req.body.from) {
+        from_balance =
+          fromLastTransaction?.from == req.body.from
+            ? fromLastTransaction?.from_balance || null
+            : fromLastTransaction?.to_balance || null;
+      }
+      let to_balance = null;
+      if (req.body.to) {
+        to_balance =
+          toLastTransaction?.from == req.body.to
+            ? toLastTransaction?.from_balance || null
+            : toLastTransaction?.to_balance || null;
+      }
+
       var transactions1 = await Trasaction.find().sort({ _id: -1 }).limit(1);
-      var transaction = await Trasaction({
-        ...req.body,
-        transaction_id: (transactions1[0]?.transaction_id || 111110) + 1,
-        balance: (transactions[0]?.balance || 0) + req.body.amount,
-      });
+
+      if (req.body.transaction_type !== "Transfer") {
+        var transaction = await Trasaction({
+          ...req.body,
+          transaction_id: (transactions1[0]?.transaction_id || 111110) + 1,
+          from_balance: req.body.from
+            ? from_balance
+              ? Number(from_balance) - Number(req.body.amount)
+              : Number(req.body.amount)
+            : null,
+          to_balance: req.body.to
+            ? to_balance
+              ? Number(to_balance) + Number(req.body.amount)
+              : Number(req.body.amount)
+            : null,
+        });
+      } else {
+        var transaction = await Trasaction({
+          ...req.body,
+          transaction_id: (transactions1[0]?.transaction_id || 111110) + 1,
+          from_balance: from_balance
+            ? Number(from_balance) - Number(req.body.amount)
+            : Number(req.body.amount),
+          to_balance: Number(to_balance)
+            ? Number(to_balance) + Number(req.body.amount)
+            : Number(req.body.amount),
+        });
+      }
       await transaction.save();
-      // var transactions = await Trasaction.find();
+      var transactions = await Trasaction.find();
       return res.status(200).json({
         error: false,
         ok: true,
-        // data: transactions,
+        data: transactions,
         // message: `Trasaction Number - ${
         //   transactions[transactions.length - 1].transaction_id
         // }`,
@@ -73,7 +118,8 @@ const handler = async (req, res) => {
         { transaction_id: req.body.transaction_id },
         {
           ...req.body,
-          balance: transaction?.balance - transaction.amount + req.body.amount,
+          balance:
+            transaction?.balance - transaction.amount + Number(req.body.amount),
         }
       );
       return res.status(200).json({
@@ -82,7 +128,7 @@ const handler = async (req, res) => {
         data: {
           balance: transaction?.balance,
           amount1: transaction.amount,
-          amount2: req.body.amount,
+          amount2: Number(req.body.amount),
         },
         message: "Trasaction updated successfully",
       });

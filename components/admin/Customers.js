@@ -9,10 +9,12 @@ import {
   Group,
   LoadingOverlay,
   Menu,
+  ThemeIcon,
   rem,
 } from "@mantine/core";
 import { useRouter } from "next/router";
 import {
+  IconCertificate,
   IconCheck,
   IconCirclePlus,
   IconDownload,
@@ -25,11 +27,138 @@ import { useDisclosure } from "@mantine/hooks";
 import * as XLSX from "xlsx";
 import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-react";
+import { ToWords } from "to-words";
+import jsPDF from "jspdf";
 
 export default function Customers() {
   const router = useRouter();
   const [data, setData] = useState([]);
   const [value, setValue] = useState(null);
+
+  const getCertificate = async (cid) => {
+    const {
+      data: {
+        data: { name, id, shares, address },
+      },
+    } = await axios.get(`/api/customer?id=${cid}`, {
+      filters: router.query,
+    });
+    console.log(data);
+    const toWords = new ToWords();
+    var doc = new jsPDF("l", "mm", "a4");
+
+    doc.addImage(process.env.LOGO_BASE64, "PNG", 5, 2, 40, 20);
+    doc
+      .setFontSize(30)
+      .setFont("Times New Roman", "bold")
+      .text(48, 16, "SBU MUTUAL BENEFIT FUNDS NIDHI LIMITED");
+    doc
+      .setFontSize(50)
+      .setFont("Times New Roman", "bold")
+      .text(80, 35, "Shares Certificate");
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(5, 55, "Name - ");
+    doc.setFontSize(18).setFont("Courier", "normal").text(30, 55, name);
+    doc.setFontSize(15).setFont("Courier", "normal").text(30, 65, address);
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(205, 55, "Customer ID - ");
+    doc.setFontSize(18).setFont("Courier", "normal").text(250, 55, String(id));
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(5, 85, "Certificate No - ");
+    doc.setFontSize(18).setFont("Courier", "normal").text(55, 85, String(id));
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(120, 85, "Share Face Value - ");
+    doc
+      .setFontSize(18)
+      .setFont("Courier", "normal")
+      .text(
+        180,
+        85,
+        Number(process.env.SHARE_PRICE).toLocaleString("en-IN") + "/-"
+      );
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(5, 105, "Shares Count - ");
+    doc
+      .setFontSize(18)
+      .setFont("Courier", "normal")
+      .text(55, 105, String(shares));
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(120, 105, "In Words - ");
+    doc
+      .setFontSize(18)
+      .setFont("Courier", "normal")
+      .text(155, 105, toWords.convert(shares) + " Only");
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(5, 125, "Shares Amount - ");
+    doc
+      .setFontSize(18)
+      .setFont("Courier", "normal")
+      .text(
+        60,
+        125,
+        Number(shares * process.env.SHARE_PRICE).toLocaleString("en-IN") + "/-"
+      );
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(120, 125, "In Words - ");
+    doc
+      .setFontSize(18)
+      .setFont("Courier", "normal")
+      .text(
+        155,
+        125,
+        "Rs. " +
+          toWords.convert(Number(shares * process.env.SHARE_PRICE), {
+            currency: true,
+          })
+      );
+
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(5, 145, "Date - ");
+    doc
+      .setFontSize(18)
+      .setFont("Courier", "normal")
+      .text(25, 145, dayjs().format("DD/MM/YYYY"));
+
+    doc
+      .setFontSize(18)
+      .setFont("Times New Roman", "normal")
+      .text(235, 190, "S. D. Jatla");
+    doc
+      .setFontSize(20)
+      .setFont("Times New Roman", "bold")
+      .text(215, 200, "Authorized Signatory");
+
+    doc.setLineWidth(2);
+    doc.rect(2, 2, 293, 206);
+    doc.save(`Certificate - ${id}`);
+  };
+
   const getCustomers = async () => {
     handlers.open();
     const { data } = await axios.post(`/api/customers`, {
@@ -110,19 +239,28 @@ export default function Customers() {
       },
       {
         accessorKey: "isAdmin",
-        header: "isAdmin",
+        header: "Admin",
         size: 50,
-        Cell: ({ cell }) => (cell.getValue() ? "Yes" : "No"),
+        // Cell: ({ cell }) => (cell.getValue() ? "Yes" : "No"),
+        Cell: ({ cell }) => (
+          <ThemeIcon
+            radius="xl"
+            size="sm"
+            color={cell.getValue() ? "green" : "red"}
+          >
+            {cell.getValue() ? <IconCheck /> : <IconX />}
+          </ThemeIcon>
+        ),
       },
       {
-        accessorKey: "Created At",
-        header: "createdAt",
+        accessorKey: "createdAt",
+        header: "Created On",
         Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY"),
         size: 50,
       },
       {
-        accessorKey: "Updated At",
-        header: "updatedAt",
+        accessorKey: "updatedAt",
+        header: "Last Updated",
         Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY"),
         size: 50,
       },
@@ -273,6 +411,9 @@ export default function Customers() {
             onClick={() => openModal(row.original.name, row.original.id)}
           >
             Delete
+          </Menu.Item>,
+          <Menu.Item onClick={() => getCertificate(row.original.id)}>
+            Certificate
           </Menu.Item>,
         ]}
       />

@@ -19,6 +19,7 @@ import { usePathname } from "next/navigation";
 import {
   IconCoinRupee,
   IconHome2,
+  IconLogin,
   IconPigMoney,
   IconUserCircle,
 } from "@tabler/icons-react";
@@ -109,7 +110,7 @@ const useStyles = createStyles((theme) => ({
 export default function HeaderComponent({
   links = [
     {
-      link: "/admin/home",
+      link: "/admin",
       label: "Home",
       icon: <IconHome2 />,
     },
@@ -142,8 +143,6 @@ export default function HeaderComponent({
       if (!session.user.isAdmin) {
         router.push("/");
       }
-    } else {
-      router.push("/");
     }
   }, []);
 
@@ -172,13 +171,39 @@ export default function HeaderComponent({
     </Button>
   ));
 
+  const items1 = [
+    {
+      link: "/login",
+      label: "Login",
+      icon: <IconLogin />,
+    },
+  ].map((link) => (
+    <Button
+      key={link.label}
+      // href={link.link}
+      className={cx(classes.link, {
+        [classes.linkActive]: active?.includes(link.link),
+      })}
+      onClick={(event) => {
+        event.preventDefault();
+        setActive(link.link);
+        router.push(link.link);
+        close();
+      }}
+      variant="white"
+      leftIcon={link.icon}
+    >
+      {link.label}
+    </Button>
+  ));
+
   return (
     <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
       <Container className={classes.header}>
         {/* <MantineLogo size={28} /> */}
         <Image src="../../../SBU-Final.png" width={100} />
         <Group spacing={5} className={classes.links}>
-          {items}
+          {session ? items : items1}
           <Button
             key={"logout"}
             className={cx(classes.link, {
@@ -188,7 +213,7 @@ export default function HeaderComponent({
               event.preventDefault();
               setActive("");
               signOut();
-              router.push("/");
+              router.push("/login");
               close();
             }}
             variant="white"
@@ -208,7 +233,7 @@ export default function HeaderComponent({
         <Transition transition="pop-top-right" duration={200} mounted={opened}>
           {(styles) => (
             <Paper className={classes.dropdown} withBorder style={styles}>
-              {items}
+              {session ? items : items1}
             </Paper>
           )}
         </Transition>

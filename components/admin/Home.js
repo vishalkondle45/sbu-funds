@@ -33,12 +33,12 @@ export default function Home() {
   const [data, setData] = useState([]);
   const router = useRouter();
   useEffect(() => {
-    const getHome = async () => {
-      await axios.get("/api/home").then((response) => {
-        setData(response.data.data);
-      });
-    };
-    getHome();
+    // const getHome = async () => {
+    //   await axios.get("/api/home").then((response) => {
+    //     setData(response.data.data);
+    //   });
+    // };
+    // getHome();
   }, []);
   const stats = data?.map((stat) => {
     const Icon = icons[stat.icon];

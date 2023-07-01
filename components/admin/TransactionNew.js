@@ -4,7 +4,6 @@ import {
   SimpleGrid,
   Select,
   Textarea,
-  TextInput,
   NumberInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -12,37 +11,41 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState } from "react";
 
 export default function TransactionNew() {
-  const [customersList, setCustomersList] = useState([]);
   const [accountsList, setAccountsList] = useState([]);
-  const [data, setData] = useState([
-    "Cash Deposit",
-    "Cash Withdrawl",
-    "Cheque Deposit",
-    "Cheque Withdrawl",
-    "Interest Paid to Customer",
-    "Interest Paid to Bank",
-  ]);
   const router = useRouter();
   const form = useForm({
     initialValues: {
       transaction_id: "",
-      customer_id: "",
-      account_number: "",
+      from: null,
+      to: null,
       amount: "",
       transaction_type: "Cash",
       comments: "",
     },
     validate: {
-      customer_id: (value) => (value ? null : "Select valid customer"),
-      account_number: (value) => (value ? null : "Select account number"),
+      from: (value, values) =>
+        value !== values.to ? null : "Cant be same as To",
+      to: (value, values) =>
+        value !== values.from ? null : "Cant be same as From",
       amount: (value) => (value != 0 ? null : "Enter valid amount"),
+      transaction_type: (value, values) =>
+        value == "Cash" || value == "Cheque" || (values.from && values.to)
+          ? null
+          : "From and To both are mandatory",
     },
   });
 
   const newTransaction = async (values) => {
+    if (values.transaction_type != "Transfer" && values.from && values.to) {
+      form.setFieldError(
+        "transaction_type",
+        "Please select From or To only for this transaction type."
+      );
+      return null;
+    }
     await axios
       .post("/api/transaction", values)
       .then(({ data }) => {
@@ -67,50 +70,46 @@ export default function TransactionNew() {
   };
 
   useEffect(() => {
-    const getCustomersList = async () => {
-      const { data } = await axios.get("/api/customers");
-      setCustomersList(data.data);
-      form.setFieldValue("account_number", "");
-    };
-    getCustomersList();
-  }, []);
-
-  useEffect(() => {
-    const getAccountsList = async (customer_id) => {
-      const { data } = await axios.get(`/api/accounts?id=${customer_id}`);
+    const getAccountsList = async () => {
+      const { data } = await axios.get(`/api/accounts`);
       setAccountsList(data.data);
-      form.setFieldValue("account_number", "");
+      form.setFieldValue("from", "");
+      form.setFieldValue("to", "");
     };
-    if (form.values.customer_id) {
-      getAccountsList(form.values.customer_id);
-    }
-  }, [form.values.customer_id]);
+    getAccountsList();
+  }, []);
 
   return (
     <Box maw={300} mx="auto">
       <form onSubmit={form.onSubmit((values) => newTransaction(values))}>
         <SimpleGrid cols={1}>
           <Select
-            withAsterisk
-            label="Customer"
-            data={customersList}
-            searchable
-            nothingFound="No Customers Found"
-            placeholder="Pick one"
-            {...form.getInputProps("customer_id")}
-          />
-          <Select
-            withAsterisk
-            label="Account"
+            withAsterisk={
+              form.values.transaction_type === "Transfer" || !form.values.to
+            }
+            label="From"
             data={accountsList}
             searchable
+            clearable
             nothingFound="No Accounts Found"
-            placeholder="Pick one"
-            {...form.getInputProps("account_number")}
+            placeholder="Select From Account"
+            {...form.getInputProps("from")}
+          />
+          <Select
+            withAsterisk={
+              form.values.transaction_type === "Transfer" || !form.values.from
+            }
+            label="To"
+            data={accountsList}
+            searchable
+            clearable
+            nothingFound="No Accounts Found"
+            placeholder="Select To Account"
+            {...form.getInputProps("to")}
           />
           <NumberInput
             label="Amount"
-            placeholder="Amount"
+            placeholder="Enter Amount"
             withAsterisk
             {...form.getInputProps("amount")}
             precision={2}
@@ -118,22 +117,13 @@ export default function TransactionNew() {
           />
           <Select
             withAsterisk
-            label="Account Type"
-            data={["Cash", "Cheque"]}
+            label="Transaction Type"
+            data={["Cash", "Transfer", "Cheque", "NEFT", "RTGS"]}
             {...form.getInputProps("transaction_type")}
           />
-          <Select
+          <Textarea
             label="Comments"
-            placeholder="Comments"
-            data={data}
-            searchable
-            creatable
-            getCreateLabel={(query) => `+ Create ${query}`}
-            onCreate={(query) => {
-              const item = { value: query, label: query };
-              setData((current) => [...current, item]);
-              return item;
-            }}
+            placeholder="Account No | Cheque No | NEFT | RTGS"
             {...form.getInputProps("comments")}
           />
           <Button type="submit" color="dark">

@@ -22,17 +22,27 @@ export default function Transsactions() {
   const router = useRouter();
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
-  const getTranssactions = async () => {
+  const getTransactions = async (filters) => {
     handlers.open();
     const { data } = await axios.post(`/api/transactions`, {
-      filters: router.query,
+      filters,
     });
     setData(data.data);
     handlers.close();
   };
   useEffect(() => {
-    if (router.query) getTranssactions();
+    getTransactions(router.query);
   }, [router.query]);
+
+  const getCustomer = async (id) => {
+    const { data } = await axios.get(`/api/account?id=${id}`);
+    const { data: customer } = await axios.get(
+      `/api/customer?id=${data.data.customer_id}`
+    );
+
+    console.log(customer.data.name);
+  };
+
   const columns = useMemo(
     () => [
       {
@@ -41,24 +51,43 @@ export default function Transsactions() {
         size: 50,
       },
       {
-        accessorKey: "account_number",
-        header: "Account No",
+        accessorKey: "from",
+        header: "From",
         size: 50,
+        Cell: ({ cell }) => (
+          <Text
+            fw={700}
+            // onMouseEnter={() => getCustomer(cell.getValue())}
+          >
+            {cell.getValue()}
+          </Text>
+        ),
       },
       {
-        accessorKey: "name",
-        header: "Customer Name",
+        accessorKey: "to",
+        header: "To",
         size: 50,
+        Cell: ({ cell }) => (
+          <Text
+            fw={700}
+            // onMouseEnter={() => getCustomer(cell.getValue())}
+          >
+            {cell.getValue()}
+          </Text>
+        ),
       },
       {
         accessorKey: "amount",
         header: "Amount",
         size: 50,
-        Cell: ({ cell }) => (
-          <Text color={cell.getValue() < 0 ? "red" : "green"} fw={700}>
-            {cell.getValue() < 0
-              ? cell.getValue().toFixed(2)
-              : "+" + cell.getValue().toFixed(2)}
+        Cell: ({ row, cell }) => (
+          <Text
+            color={
+              (!row.original.to && "red") || (!row.original.from && "green")
+            }
+            fw={700}
+          >
+            {cell.getValue().toFixed(2)}
           </Text>
         ),
       },
@@ -68,13 +97,19 @@ export default function Transsactions() {
         size: 50,
       },
       {
-        accessorKey: "balance",
-        header: "Balance",
+        accessorKey: "from_balance",
+        header: "From Balance",
         size: 50,
         Cell: ({ cell }) => (
-          <Text color={cell.getValue() < 0 ? "red" : "green"} fw={700}>
-            {cell.getValue().toFixed(2)}
-          </Text>
+          <Text fw={700}>{cell.getValue()?.toFixed(2) || "-"}</Text>
+        ),
+      },
+      {
+        accessorKey: "to_balance",
+        header: "To Balance",
+        size: 50,
+        Cell: ({ cell }) => (
+          <Text fw={700}>{cell.getValue()?.toFixed(2) || "-"}</Text>
         ),
       },
       {
@@ -101,7 +136,7 @@ export default function Transsactions() {
   const deleteTransaction = async (id) => {
     handlers.open();
     await axios.delete(`/api/transaction?id=${id}`);
-    getTranssactions();
+    getTransactions();
   };
 
   const openModal = (id) =>
