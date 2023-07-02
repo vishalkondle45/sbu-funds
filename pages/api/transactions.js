@@ -13,41 +13,6 @@ const handler = async (req, res) => {
   if (req.method === "POST") {
     try {
       var transactions = await Transaction.find();
-      // let obj = {};
-      // for (const property in req.body.filters) {
-      //   obj[property] =
-      //     Number(req.body.filters[property]) || req.body.filters[property];
-      // }
-      // var transactions = await Transaction.aggregate([
-      //   {
-      //     $match: {
-      //       $or: [obj],
-      //     },
-      //   },
-      //   {
-      //     $lookup: {
-      //       from: "customers",
-      //       localField: "customer_id",
-      //       foreignField: "id",
-      //       as: "customers",
-      //     },
-      //   },
-      //   { $unwind: "$customers" },
-      //   {
-      //     $project: {
-      //       name: "$customers.name",
-      //       transaction_id: 1,
-      //       customer_id: 1,
-      //       account_number: 1,
-      //       amount: 1,
-      //       transaction_type: 1,
-      //       balance: 1,
-      //       comments: 1,
-      //       createdAt: 1,
-      //       updatedAt: 1,
-      //     },
-      //   },
-      // ]);
       return res.status(200).json({
         error: false,
         ok: true,

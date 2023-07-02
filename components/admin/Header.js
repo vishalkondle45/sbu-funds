@@ -204,23 +204,25 @@ export default function HeaderComponent({
         <Image src="../../../SBU-Final.png" width={100} />
         <Group spacing={5} className={classes.links}>
           {session ? items : items1}
-          <Button
-            key={"logout"}
-            className={cx(classes.link, {
-              [classes.linkActive]: active?.includes("/logout"),
-            })}
-            onClick={(event) => {
-              event.preventDefault();
-              setActive("");
-              signOut();
-              router.push("/login");
-              close();
-            }}
-            variant="white"
-            leftIcon={<IconLogout />}
-          >
-            Logout
-          </Button>
+          {session && (
+            <Button
+              key={"logout"}
+              className={cx(classes.link, {
+                [classes.linkActive]: active?.includes("/logout"),
+              })}
+              onClick={(event) => {
+                event.preventDefault();
+                setActive("");
+                signOut();
+                router.push("/login");
+                close();
+              }}
+              variant="white"
+              leftIcon={<IconLogout />}
+            >
+              Logout
+            </Button>
+          )}
         </Group>
 
         <Burger

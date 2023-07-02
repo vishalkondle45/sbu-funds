@@ -1,4 +1,4 @@
-import { Group, Loader, Paper, Switch, Title } from "@mantine/core";
+import { Group, Loader, Paper, Title } from "@mantine/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 

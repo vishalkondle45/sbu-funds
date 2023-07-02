@@ -55,8 +55,14 @@ export default function AccountNew() {
 
   useEffect(() => {
     const getCustomersList = async () => {
-      const { data } = await axios.get("/api/customers");
-      setCustomersList(data.data);
+      await axios
+        .get("/api/customers")
+        .then(({ data }) => {
+          setCustomersList(data.data);
+        })
+        .catch((error) => {
+          router.push("/login");
+        });
     };
     getCustomersList();
   }, []);

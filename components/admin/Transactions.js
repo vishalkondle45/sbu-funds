@@ -34,15 +34,6 @@ export default function Transsactions() {
     getTransactions(router.query);
   }, [router.query]);
 
-  const getCustomer = async (id) => {
-    const { data } = await axios.get(`/api/account?id=${id}`);
-    const { data: customer } = await axios.get(
-      `/api/customer?id=${data.data.customer_id}`
-    );
-
-    console.log(customer.data.name);
-  };
-
   const columns = useMemo(
     () => [
       {

@@ -58,12 +58,10 @@ export default function Transsactions() {
         size: 50,
         Cell: ({ row, cell }) => (
           <Text
-            color={
-              accounts.includes(Number(row.original.from)) ? "red" : "green"
-            }
+            color={accounts.includes(row.original.from) ? "red" : "green"}
             fw={700}
           >
-            {accounts.includes(Number(row.original.from))
+            {accounts.includes(row.original.from)
               ? "-" + cell.getValue().toFixed(2)
               : "+" + cell.getValue().toFixed(2)}
           </Text>
@@ -80,9 +78,9 @@ export default function Transsactions() {
         size: 50,
         Cell: ({ row, cell }) => (
           <Text fw={700}>
-            {accounts.includes(Number(row.original.from))
-              ? row.original.from_balance.toFixed(2)
-              : row.original.to_balance.toFixed(2)}
+            {accounts.includes(row.original.from)
+              ? row.original.from_balance
+              : row.original.to_balance}
           </Text>
         ),
       },

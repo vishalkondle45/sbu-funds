@@ -32,17 +32,23 @@ export default function AccountNew({ id }) {
 
   useEffect(() => {
     const getAccount = async () => {
-      const { data } = await axios.get(`/api/account?id=${id}`);
-      if (!data.data) {
-        notifications.show({
-          title: `No account with id - ${id} ... 😥`,
-          icon: <IconX size="1.2rem" />,
-          color: "red",
+      await axios
+        .get(`/api/account?id=${id}`)
+        .then(({ data }) => {
+          if (!data.data) {
+            notifications.show({
+              title: `No account with id - ${id} ... 😥`,
+              icon: <IconX size="1.2rem" />,
+              color: "red",
+            });
+            router.push("/admin/accounts");
+          } else {
+            form.setValues(data.data);
+          }
+        })
+        .catch((error) => {
+          router.push("/login");
         });
-        router.push("/admin/accounts");
-      } else {
-        form.setValues(data.data);
-      }
     };
     if (id) getAccount();
   }, [id]);

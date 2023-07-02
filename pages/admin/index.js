@@ -2,6 +2,7 @@ import DashboardItem from "@/components/admin/DashboardItem";
 import HeaderComponent from "@/components/admin/Header";
 import { SimpleGrid } from "@mantine/core";
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function Page() {
@@ -19,10 +20,17 @@ export default function Page() {
     },
     setCount,
   ] = useState({});
+  const router = useRouter();
   useEffect(() => {
     const getCount = async () => {
-      const { data } = await axios.get("/api/count");
-      setCount(data.data);
+      await axios
+        .get("/api/count")
+        .then(({ data }) => {
+          setCount(data.data);
+        })
+        .catch((error) => {
+          router.push("/login");
+        });
     };
     getCount();
   }, []);

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MantineReactTable } from "mantine-react-table";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -9,7 +9,6 @@ import {
   Group,
   LoadingOverlay,
   Menu,
-  Text,
   rem,
 } from "@mantine/core";
 import { useRouter } from "next/router";
@@ -22,11 +21,8 @@ export default function Accounts() {
   const router = useRouter();
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
-  const [balances, setBalances] = useState([]);
   const getAccounts = async () => {
     handlers.open();
-    const { data: data1 } = await axios.get(`/api/balance`);
-    setBalances(data1.data);
     const { data } = await axios.post(`/api/accounts`, {
       filters: router.query,
     });
@@ -36,9 +32,6 @@ export default function Accounts() {
   useEffect(() => {
     if (router.query) getAccounts();
   }, [router.query]);
-
-  // const getBalance = (account_number) =>
-  //   balances.find((obj) => obj._id === account_number)?.balance || 0;
 
   const columns = [
     {
