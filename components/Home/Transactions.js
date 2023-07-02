@@ -35,7 +35,7 @@ export default function Transsactions() {
     () => [
       {
         accessorKey: "transaction_id",
-        header: "Transaction ID",
+        header: "Trns. ID",
         size: 50,
       },
       {
