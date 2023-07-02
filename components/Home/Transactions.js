@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { MantineReactTable } from "mantine-react-table";
 import axios from "axios";
 import dayjs from "dayjs";
-import { Container, LoadingOverlay, Select, Text } from "@mantine/core";
+import { Container, Loader, LoadingOverlay, Select, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 export default function Transsactions() {
   const [transactions, setTransactions] = useState([]);
@@ -110,6 +110,12 @@ export default function Transsactions() {
         data={accounts}
         value={value}
         onChange={setValue}
+      />
+
+      <LoadingOverlay
+        visible={visible}
+        loader={<Loader variant="dots" />}
+        overlayBlur={2}
       />
       <MantineReactTable
         columns={columns}

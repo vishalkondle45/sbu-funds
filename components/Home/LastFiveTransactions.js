@@ -1,14 +1,19 @@
-import { Table, Title } from "@mantine/core";
+import { Loader, LoadingOverlay, Table, Title } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import axios from "axios";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
 const LastFiveTransactions = () => {
   const [transactions, setTransactions] = useState([]);
+
+  const [visible, handlers] = useDisclosure(false);
   useEffect(() => {
     const getTransactions = async () => {
+      handlers.open();
       const { data } = await axios.get("/api/lastFiveTransactions");
       setTransactions(data.data);
+      handlers.close();
     };
     getTransactions();
   }, []);
@@ -36,6 +41,11 @@ const LastFiveTransactions = () => {
         Last 5 Transactions
       </Title>
 
+      <LoadingOverlay
+        visible={visible}
+        loader={<Loader variant="dots" />}
+        overlayBlur={2}
+      />
       <Table striped highlightOnHover withBorder>
         <thead>
           <tr style={{ backgroundColor: "#FA5252" }}>
