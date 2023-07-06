@@ -153,8 +153,8 @@ export default function HeaderComponent() {
       icon: <IconCoinRupee />,
     },
     {
-      link: "/account",
-      label: "My Account",
+      link: "/accounts",
+      label: "My Accounts",
       icon: <IconUser />,
     },
   ];

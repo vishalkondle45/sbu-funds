@@ -14,7 +14,9 @@ const Accounts = () => {
   }, []);
   return (
     <>
-      <Title order={1}>Accounts</Title>
+      <Title order={1} my={"xl"}>
+        My Accounts
+      </Title>
       <SimpleGrid cols={3}>
         {accounts.map((account) => (
           <Account account={account} />

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MantineReactTable } from "mantine-react-table";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -8,6 +8,7 @@ export default function Transsactions() {
   const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [value, setValue] = useState(null);
+  const account = useRef("");
 
   const getTransactions = async () => {
     handlers.open();
@@ -20,6 +21,7 @@ export default function Transsactions() {
   useEffect(() => {
     if (value) {
       getTransactions();
+      account.current = value;
     }
   }, [value]);
 
@@ -58,10 +60,10 @@ export default function Transsactions() {
         size: 50,
         Cell: ({ row, cell }) => (
           <Text
-            color={accounts.includes(row.original.from) ? "red" : "green"}
+            color={account.current == row.original.from ? "red" : "green"}
             fw={700}
           >
-            {accounts.includes(row.original.from)
+            {account.current == row.original.from
               ? "-" + cell.getValue().toFixed(2)
               : "+" + cell.getValue().toFixed(2)}
           </Text>
@@ -78,7 +80,7 @@ export default function Transsactions() {
         size: 50,
         Cell: ({ row, cell }) => (
           <Text fw={700}>
-            {accounts.includes(row.original.from)
+            {account.current == row.original.from
               ? row.original.from_balance
               : row.original.to_balance}
           </Text>
@@ -110,8 +112,8 @@ export default function Transsactions() {
         data={accounts}
         value={value}
         onChange={setValue}
+        withAsterisk
       />
-
       <LoadingOverlay
         visible={visible}
         loader={<Loader variant="dots" />}

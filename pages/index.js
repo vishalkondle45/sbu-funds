@@ -42,7 +42,6 @@ export default function Component() {
             <>
               <Header />
               <Container>
-                <Accounts />
                 <LastFiveTransactions />
               </Container>
             </>
