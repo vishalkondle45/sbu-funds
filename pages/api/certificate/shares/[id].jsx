@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import connectDB from "@/middleware/mongodb";
 import Customer from "@/models/customer";
 import { authOptions } from "../../auth/[...nextauth]";
+import Share from "@/models/share";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
@@ -13,12 +14,13 @@ const handler = async (req, res) => {
   if (req.method === "GET") {
     try {
       var customer = await Customer.findOne({ id: req.query.id });
+      var shares = await Share.findOne();
       return res.status(200).json({
         name: customer.name,
         customerId: customer.id,
-        sharesFaceValue: 100,
+        sharesFaceValue: shares.value,
         sharesCount: customer.shares,
-        sharesValue: customer.shares * 100,
+        sharesValue: customer.shares * shares.value,
       });
     } catch (error) {
       return res.status(500).json({
