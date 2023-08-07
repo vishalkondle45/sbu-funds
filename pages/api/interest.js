@@ -4,12 +4,12 @@ import connectDB from "../../middleware/mongodb";
 import Interest from "../../models/interest";
 
 const handler = async (req, res) => {
-  // const session = await getServerSession(req, res, authOptions);
-  // if (!session?.user?.isAdmin) {
-  //   return res
-  //     .status(401)
-  //     .json({ error: true, message: "You are unauthorized!" });
-  // }
+  const session = await getServerSession(req, res, authOptions);
+  if (!session?.user?.isAdmin) {
+    return res
+      .status(401)
+      .json({ error: true, message: "You are unauthorized!" });
+  }
   if (req.method === "POST") {
     try {
       let interests = await Interest.find().sort({ _id: -1 }).limit(1);
