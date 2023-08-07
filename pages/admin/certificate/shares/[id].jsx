@@ -34,11 +34,9 @@ export default function Component() {
   });
 
   useEffect(() => {
-    console.log(router.query.id);
-
     const getDetails = async (id) => {
       await axios
-        .get(`http://localhost:3000/api/certificate/shares/${id}`)
+        .get(`/api/certificate/shares/${id}`)
         .then((res) => {
           setDetails((details) => ({ ...details, ...res.data }));
         })
