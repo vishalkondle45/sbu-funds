@@ -38,25 +38,31 @@ export default function Customers() {
   const getCertificate = async (cid) => {
     const {
       data: {
-        data: { name, id, shares, address },
+        data: { name, id, shares, address, createdAt },
       },
     } = await axios.get(`/api/customer?id=${cid}`, {
       filters: router.query,
     });
-    console.log(data);
     const toWords = new ToWords();
     var doc = new jsPDF("l", "mm", "a4");
 
     doc.addImage(process.env.LOGO_BASE64, "PNG", 5, 2, 40, 20);
     doc
+      .setFontSize(40)
+      .setFont("Times New Roman", "bold")
+      .text(50, 16, "SBU MUTUAL BENEFIT FUNDS");
+    doc
+      .setFontSize(40)
+      .setFont("Times New Roman", "bold")
+      .text(100, 28, "NIDHI LIMITED");
+    doc
       .setFontSize(30)
       .setFont("Times New Roman", "bold")
-      .text(48, 16, "SBU MUTUAL BENEFIT FUNDS NIDHI LIMITED");
+      .text(110, 48, "Share Certificate");
     doc
-      .setFontSize(50)
+      .setFontSize(15)
       .setFont("Times New Roman", "bold")
-      .text(80, 35, "Shares Certificate");
-
+      .text(100, 35, "Registration No - U64990PN2023PLN219751");
     doc
       .setFontSize(20)
       .setFont("Times New Roman", "bold")
@@ -86,13 +92,13 @@ export default function Customers() {
       .text(
         180,
         85,
-        Number(process.env.SHARE_PRICE).toLocaleString("en-IN") + "/-"
+        "Rs. " + Number(process.env.SHARE_PRICE).toLocaleString("en-IN") + "/-"
       );
 
     doc
       .setFontSize(20)
       .setFont("Times New Roman", "bold")
-      .text(5, 105, "Shares Count - ");
+      .text(5, 105, "No. Of Shares - ");
     doc
       .setFontSize(18)
       .setFont("Courier", "normal")
@@ -110,7 +116,7 @@ export default function Customers() {
     doc
       .setFontSize(20)
       .setFont("Times New Roman", "bold")
-      .text(5, 125, "Shares Amount - ");
+      .text(5, 125, "Shares Value - ");
     doc
       .setFontSize(18)
       .setFont("Courier", "normal")
@@ -130,10 +136,9 @@ export default function Customers() {
       .text(
         155,
         125,
-        "Rs. " +
-          toWords.convert(Number(shares * process.env.SHARE_PRICE), {
-            currency: true,
-          })
+        toWords.convert(Number(shares * process.env.SHARE_PRICE), {
+          currency: true,
+        })
       );
 
     doc
@@ -143,19 +148,16 @@ export default function Customers() {
     doc
       .setFontSize(18)
       .setFont("Courier", "normal")
-      .text(25, 145, dayjs().format("DD/MM/YYYY"));
+      .text(25, 145, dayjs(createdAt).format("DD/MM/YYYY"));
 
-    doc
-      .setFontSize(18)
-      .setFont("Times New Roman", "normal")
-      .text(235, 190, "S. D. Jatla");
     doc
       .setFontSize(20)
       .setFont("Times New Roman", "bold")
-      .text(215, 200, "Authorized Signatory");
+      .text(215, 190, "Authorized Signatory");
 
     doc.setLineWidth(2);
     doc.rect(2, 2, 293, 206);
+    // doc.save(`Certificate - ${id}`);
     doc.save(`Certificate - ${id}`);
   };
 

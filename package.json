@@ -16,7 +16,7 @@
     "net": false,
     "stream": false,
     "tls": false
-    },
+  },
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/server": "^11.10.0",
@@ -42,6 +42,7 @@
     "dayjs": "^1.11.8",
     "embla-carousel-react": "^7.1.0",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.31",
     "mantine-react-table": "^1.0.0-beta.3",
     "mongoose": "^7.0.4",
     "next": "13.3.1",

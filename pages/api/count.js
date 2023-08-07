@@ -19,11 +19,11 @@ const handler = async (req, res) => {
       var transaction = await Transaction.countDocuments();
       var deposit = await Transaction.countDocuments({
         transaction_type: "Cash",
-        from: "",
+        from: null,
       });
       var withdrawl = await Transaction.countDocuments({
         transaction_type: "Cash",
-        to: "",
+        to: null,
       });
       var cheque = await Transaction.countDocuments({
         transaction_type: "Cheque",
@@ -37,6 +37,65 @@ const handler = async (req, res) => {
       var rtgs = await Transaction.countDocuments({
         transaction_type: "RTGS",
       });
+
+      // let xyz = await Transaction.aggregate([
+      //   {
+      //     $lookup: {
+      //       from: "accounts",
+      //       localField: "from",
+      //       foreignField: "account_number",
+      //       as: "from_account",
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "accounts",
+      //       localField: "to",
+      //       foreignField: "account_number",
+      //       as: "to_account",
+      //     },
+      //   },
+      //   {
+      //     $unwind: {
+      //       path: "$from_account",
+      //       preserveNullAndEmptyArrays: true,
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "customers",
+      //       localField: "from_account.customer_id",
+      //       foreignField: "id",
+      //       as: "from_customer",
+      //     },
+      //   },
+      //   {
+      //     $unwind: {
+      //       path: "$to_account",
+      //       preserveNullAndEmptyArrays: true,
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "customers",
+      //       localField: "to_account.customer_id",
+      //       foreignField: "id",
+      //       as: "to_customer",
+      //     },
+      //   },
+      //   {
+      //     $unwind: {
+      //       path: "$to_customer",
+      //       preserveNullAndEmptyArrays: true,
+      //     },
+      //   },
+      //   {
+      //     $unwind: {
+      //       path: "$from_customer",
+      //       preserveNullAndEmptyArrays: true,
+      //     },
+      //   },
+      // ]);
       return res.status(200).json({
         error: false,
         ok: true,
@@ -50,6 +109,7 @@ const handler = async (req, res) => {
           transfer,
           neft,
           rtgs,
+          // xyz,
         },
         message: "Customer fetched successfully",
       });

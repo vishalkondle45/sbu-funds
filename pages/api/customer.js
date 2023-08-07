@@ -17,7 +17,7 @@ const handler = async (req, res) => {
       var customers = await Customer.find().sort({ _id: -1 }).limit(1);
       var customer = await Customer({
         ...req.body,
-        id: (customers[0]?.id || 100) + 1,
+        id: (customers[0]?.id || 110) + 1,
       });
       await customer.save();
       var customers = await Customer.find();

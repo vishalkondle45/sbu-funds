@@ -22,17 +22,15 @@ export default function Transsactions() {
   const router = useRouter();
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
-  const getTransactions = async (filters) => {
+  const getTransactions = async () => {
     handlers.open();
-    const { data } = await axios.post(`/api/transactions`, {
-      filters,
-    });
+    const { data } = await axios.post(`/api/transactions`);
     setData(data.data);
     handlers.close();
   };
   useEffect(() => {
-    getTransactions(router.query);
-  }, [router.query]);
+    getTransactions();
+  }, []);
 
   const columns = useMemo(
     () => [
@@ -78,7 +76,12 @@ export default function Transsactions() {
             }
             fw={700}
           >
-            {cell.getValue().toFixed(2)}
+            {!row.original.to && "-"}
+            {!row.original.from && "+"}
+            {cell.getValue()?.toLocaleString("en-IN", {
+              style: "currency",
+              currency: "INR",
+            })}
           </Text>
         ),
       },
@@ -91,16 +94,29 @@ export default function Transsactions() {
         accessorKey: "from_balance",
         header: "From Balance",
         size: 50,
-        Cell: ({ cell }) => (
-          <Text fw={700}>{cell.getValue()?.toFixed(2) || "-"}</Text>
+        Cell: ({ row, cell }) => (
+          <Text
+            color={row.original.from_balance < 0 ? "red" : "green"}
+            fw={700}
+          >
+            {cell.getValue()?.toLocaleString("en-IN", {
+              style: "currency",
+              currency: "INR",
+            })}
+          </Text>
         ),
       },
       {
         accessorKey: "to_balance",
         header: "To Balance",
         size: 50,
-        Cell: ({ cell }) => (
-          <Text fw={700}>{cell.getValue()?.toFixed(2) || "-"}</Text>
+        Cell: ({ row, cell }) => (
+          <Text color={row.original.to_balance < 0 ? "red" : "green"} fw={700}>
+            {cell.getValue()?.toLocaleString("en-IN", {
+              style: "currency",
+              currency: "INR",
+            })}
+          </Text>
         ),
       },
       {

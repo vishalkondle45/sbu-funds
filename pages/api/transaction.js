@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import connectDB from "../../middleware/mongodb";
 import Trasaction from "../../models/transaction";
 import { authOptions } from "./auth/[...nextauth]";
+import Account from "@/models/account";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
@@ -11,18 +12,25 @@ const handler = async (req, res) => {
       .json({ error: true, message: "You are unauthorized!" });
   }
   if (req.method === "POST") {
-    try {
-      var [fromLastTransaction] = await Trasaction.find({
-        $or: [{ from: req.body.from }, { to: req.body.from }],
-      })
-        .sort({ _id: -1 })
-        .limit(1);
+    req.body.from = Number(req.body.from) || null;
+    req.body.to = Number(req.body.to) || null;
 
-      var [toLastTransaction] = await Trasaction.find({
-        $or: [{ from: req.body.to }, { to: req.body.to }],
-      })
-        .sort({ _id: -1 })
-        .limit(1);
+    try {
+      var [fromLastTransaction] = req.body.from
+        ? await Trasaction.find({
+            $or: [{ from: req.body.from }, { to: req.body.from }],
+          })
+            .sort({ _id: -1 })
+            .limit(1)
+        : [null];
+
+      var [toLastTransaction] = req.body.to
+        ? await Trasaction.find({
+            $or: [{ from: req.body.to }, { to: req.body.to }],
+          })
+            .sort({ _id: -1 })
+            .limit(1)
+        : [null];
 
       let from_balance = null;
       if (req.body.from) {
@@ -39,6 +47,50 @@ const handler = async (req, res) => {
             : toLastTransaction?.to_balance || null;
       }
 
+      // Get From Account
+      let fromAccount = req.body.from
+        ? await Account.findOne({
+            account_number: req.body.from,
+          })
+        : null;
+      // Get To Account
+      let toAccount = req.body.to
+        ? await Account.findOne({
+            account_number: req.body.to,
+          })
+        : null;
+      if ((!toAccount && req.body.to) || (!fromAccount && req.body.from)) {
+        return res.status(401).json({
+          error: true,
+          ok: false,
+          data: `Invalid Accounts Selected`,
+          message: `Invalid Accounts Selected`,
+        });
+      }
+      if (
+        (!fromLastTransaction &&
+          req.body.from &&
+          fromAccount?.account_type !== "Loan Account") ||
+        (fromLastTransaction?.from_balance &&
+          fromLastTransaction?.from_balance < req.body.amount) ||
+        (fromLastTransaction?.to_balance &&
+          fromLastTransaction?.to_balance < req.body.amount)
+      ) {
+        return res.status(401).json({
+          error: true,
+          ok: false,
+          data: {
+            fromLastTransaction,
+            from: req.body.from,
+            fromAccount,
+            type: fromAccount?.account_type,
+            from_balance: fromLastTransaction?.from_balance,
+            to_balance: fromLastTransaction?.to_balance,
+            amount: req.body.amount,
+          },
+          message: `From balance is less than amount.`,
+        });
+      }
       var transactions1 = await Trasaction.find().sort({ _id: -1 }).limit(1);
 
       if (req.body.transaction_type !== "Transfer") {
@@ -48,12 +100,12 @@ const handler = async (req, res) => {
           from_balance: req.body.from
             ? from_balance
               ? Number(from_balance) - Number(req.body.amount)
-              : Number(req.body.amount)
+              : 0 - Number(req.body.amount)
             : null,
           to_balance: req.body.to
             ? to_balance
               ? Number(to_balance) + Number(req.body.amount)
-              : Number(req.body.amount)
+              : 0 + Number(req.body.amount)
             : null,
         });
       } else {
@@ -74,9 +126,9 @@ const handler = async (req, res) => {
         error: false,
         ok: true,
         data: transactions,
-        // message: `Trasaction Number - ${
-        //   transactions[transactions.length - 1].transaction_id
-        // }`,
+        message: `Trasaction Number - ${
+          transactions[transactions.length - 1].transaction_id
+        }`,
       });
     } catch (error) {
       return res.status(500).json({

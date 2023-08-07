@@ -9,6 +9,8 @@ const connectDB = (handler) => async (req, res) => {
   await mongoose.connect(process.env.mongodburl, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
+    // useCreateIndex: true, //make this true
+    autoIndex: true, //make this also true
   });
   return handler(req, res);
 };

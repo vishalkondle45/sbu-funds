@@ -12,7 +12,66 @@ const handler = async (req, res) => {
   }
   if (req.method === "POST") {
     try {
-      var transactions = await Transaction.find();
+      // var transactions = await Transaction.find();
+      var transactions = await Transaction.aggregate([
+        {
+          $lookup: {
+            from: "accounts",
+            localField: "from",
+            foreignField: "account_number",
+            as: "from_account",
+          },
+        },
+        {
+          $lookup: {
+            from: "accounts",
+            localField: "to",
+            foreignField: "account_number",
+            as: "to_account",
+          },
+        },
+        {
+          $unwind: {
+            path: "$from_account",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: "customers",
+            localField: "from_account.customer_id",
+            foreignField: "id",
+            as: "from_customer",
+          },
+        },
+        {
+          $unwind: {
+            path: "$to_account",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: "customers",
+            localField: "to_account.customer_id",
+            foreignField: "id",
+            as: "to_customer",
+          },
+        },
+        {
+          $unwind: {
+            path: "$to_customer",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $unwind: {
+            path: "$from_customer",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        { $sort: { createdAt: -1 } },
+      ]);
       return res.status(200).json({
         error: false,
         ok: true,

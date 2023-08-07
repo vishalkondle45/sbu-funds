@@ -3,7 +3,13 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import Customer from "../../../models/customer";
 import mongoose from "mongoose";
 
-const connectMongo = async () => mongoose.connect(process.env.mongodburl);
+const connectMongo = async () =>
+  mongoose.connect(process.env.mongodburl, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    // useCreateIndex: true, //make this true
+    autoIndex: true, //make this also true
+  });
 
 export const authOptions = {
   session: {

@@ -62,7 +62,7 @@ export default function TransactionNew() {
       .catch((error) => {
         notifications.show({
           title: "Transaction creation failed... 😥",
-          message: error.response.data.data,
+          message: error.response.data.message,
           icon: <IconX size="1.2rem" />,
           color: "red",
         });
@@ -73,6 +73,7 @@ export default function TransactionNew() {
     const getAccountsList = async () => {
       const { data } = await axios.get(`/api/accounts`);
       setAccountsList(data.data);
+      console.log(data.data);
       form.setFieldValue("from", "");
       form.setFieldValue("to", "");
     };

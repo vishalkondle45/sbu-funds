@@ -9,11 +9,11 @@ var transactionSchema = new Schema(
     },
     from: {
       default: null,
-      type: String,
+      type: Number,
     },
     to: {
       default: null,
-      type: String,
+      type: Number,
     },
     amount: {
       type: Number,

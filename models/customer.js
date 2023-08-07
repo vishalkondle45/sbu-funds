@@ -26,14 +26,14 @@ var customerSchema = new Schema(
       trim: true,
     },
     aadhar: {
-      type: String,
+      type: Number,
       required: true,
       minlength: 12,
       maxlength: 12,
       unique: true,
     },
     mobile: {
-      type: String,
+      type: Number,
       required: true,
       minlength: 10,
       maxlength: 10,

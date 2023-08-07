@@ -36,8 +36,10 @@ export default function CustomerNew({ id }) {
       name: (value) => (value.length > 3 ? null : "Enter valid name"),
       pan: (value) => (value.length === 10 ? null : "Enter valid pan"),
       dob: (value) => (value.length === 10 ? null : "DD-MM-YYYY"),
-      aadhar: (value) => (value.length === 12 ? null : "Enter valid aadhar"),
-      mobile: (value) => (value.length === 10 ? null : "Enter valid mobile"),
+      aadhar: (value) =>
+        String(value).length === 12 ? null : "Enter valid aadhar",
+      mobile: (value) =>
+        String(value).length === 10 ? null : "Enter valid mobile",
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Enter valid email"),
       password: (value) => (value.length > 7 ? null : "Enter min 8 characters"),
       address: (value) => (value.length > 10 ? null : "Enter valid address"),

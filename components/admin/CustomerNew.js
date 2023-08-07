@@ -53,12 +53,13 @@ export default function CustomerNew() {
           icon: <IconCheck size="1.2rem" />,
           color: "green",
         });
-        router.push("/admin/customers");
+        // router.push("/admin/customers");
       })
       .catch((error) => {
+        console.log(error);
         notifications.show({
           title: "Customer creation failed... 😥",
-          message: error.response.data.data,
+          message: error.response.data.message,
           icon: <IconX size="1.2rem" />,
           color: "red",
         });
