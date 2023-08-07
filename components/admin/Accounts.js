@@ -16,9 +16,6 @@ import { IconCirclePlus, IconDownload, IconUpload } from "@tabler/icons-react";
 import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import * as XLSX from "xlsx";
-import { ToWords } from "to-words";
-import jsPDF from "jspdf";
-import { PDFObject } from "react-pdfobject";
 
 export default function Accounts() {
   const router = useRouter();
@@ -152,37 +149,10 @@ export default function Accounts() {
       `Accounts - ${dayjs().format("DD-MM-YYYY HH:mm:ss")}.xlsx`
     );
   };
-  let [url, setUrl] = useState(null);
-  const getCertificate = (account_number) => {
-    const toWords = new ToWords();
-    var doc = new jsPDF("l", "mm", "a4");
-
-    doc.addImage(process.env.LOGO_BASE64, "PNG", 5, 2, 40, 20);
-    doc
-      .setFontSize(40)
-      .setFont("Times New Roman", "bold")
-      .text(50, 16, "SBU MUTUAL BENEFIT FUNDS");
-    doc
-      .setFontSize(40)
-      .setFont("Times New Roman", "bold")
-      .text(100, 28, "NIDHI LIMITED");
-    doc
-      .setFontSize(15)
-      .setFont("Times New Roman", "bold")
-      .text(100, 35, "Registration No - U64990PN2023PLN219751");
-    doc
-      .setFontSize(30)
-      .setFont("Times New Roman", "bold")
-      .text(95, 48, "Fixed Deposit Certificate");
-    setUrl(doc.output("bloburi"));
-
-    // doc.output("bloburi");
-  };
 
   return (
     <Container size={"xl"}>
       <LoadingOverlay visible={visible} overlayBlur={2} />
-      <PDFObject url={url || ""} />
       <MantineReactTable
         columns={columns}
         data={data}
@@ -234,11 +204,7 @@ export default function Accounts() {
               Delete
             </Menu.Item>
             {row.original.account_type === "Fixed Deposit" && (
-              <Menu.Item
-                onClick={() => getCertificate(row.original.account_number)}
-              >
-                Certificate
-              </Menu.Item>
+              <Menu.Item onClick={() => {}}>Certificate</Menu.Item>
             )}
           </>
         )}
