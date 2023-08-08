@@ -19,7 +19,7 @@ export default function Component() {
 
   if (status == "authenticated") {
     if (session.user.isAdmin) {
-      router.push("/admin");
+      router.push("/admin/home");
     }
     // else {
     //   router.push("/");

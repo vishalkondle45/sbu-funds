@@ -164,6 +164,7 @@ export default function HeaderComponent() {
       className={cx(classes.link, {
         [classes.linkActive]: active === link.link,
       })}
+      style={{ padding: "10px" }}
       onClick={(event) => {
         event.preventDefault();
         setActive(link.link);
@@ -190,6 +191,7 @@ export default function HeaderComponent() {
                 className={cx(classes.link, {
                   [classes.linkActive]: active?.includes("/logout"),
                 })}
+                style={{ padding: "0px" }}
                 onClick={(event) => {
                   event.preventDefault();
                   signOut();
@@ -229,6 +231,7 @@ export default function HeaderComponent() {
                       router.push("/login");
                     }}
                     variant="white"
+                    style={{ padding: "10px" }}
                     leftIcon={<IconLogout />}
                   >
                     Logout

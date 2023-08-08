@@ -17,6 +17,7 @@ const handler = async (req, res) => {
       var shares = await Share.findOne();
       return res.status(200).json({
         name: customer.name,
+        address: customer.address,
         customerId: customer.id,
         sharesFaceValue: shares.value,
         sharesCount: customer.shares,

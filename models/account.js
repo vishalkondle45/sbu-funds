@@ -22,10 +22,11 @@ var accountSchema = new Schema(
       ],
       default: "Savings Account",
     },
-    // maturity: {
-    //   type: String,
-    //   required: false,
-    // },
+    duration: {
+      type: Number,
+      required: false,
+      default: null,
+    },
     comments: {
       type: String,
       required: false,

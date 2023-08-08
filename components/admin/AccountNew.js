@@ -11,7 +11,7 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState } from "react";
 
 export default function AccountNew() {
   const [customersList, setCustomersList] = useState([]);
@@ -22,10 +22,20 @@ export default function AccountNew() {
       account_type: "Savings Account",
       comments: "",
       account_number: "",
+      duration: null,
     },
     validate: {
       customer_id: (value) => (value ? null : "Select Customer"),
       account_type: (value) => (value ? null : "Select Account Type"),
+      duration: (value, values) => {
+        if (
+          values.account_type === "Fixed Deposit" ||
+          values.account_type === "Recurring Deposit"
+        ) {
+          if (!value) return "Please enter duration";
+          return null;
+        } else return null;
+      },
     },
   });
 
@@ -61,11 +71,23 @@ export default function AccountNew() {
           setCustomersList(data.data);
         })
         .catch((error) => {
+          console.log(error);
           router.push("/login");
         });
     };
     getCustomersList();
   }, []);
+
+  useEffect(() => {
+    if (
+      form.values.account_type === "Fixed Deposit" ||
+      form.values.account_type === "Recurring Deposit"
+    ) {
+      form.setFieldValue("duration", 60);
+    } else {
+      form.setFieldValue("duration", null);
+    }
+  }, [form.values.account_type]);
 
   return (
     <Box maw={300} mx="auto">
@@ -91,6 +113,18 @@ export default function AccountNew() {
             ]}
             {...form.getInputProps("account_type")}
           />
+          {(form.values.account_type === "Fixed Deposit" ||
+            form.values.account_type === "Recurring Deposit") && (
+            <>
+              <TextInput
+                withAsterisk
+                label="Duration ( In Months )"
+                type="number"
+                placeholder="Duration"
+                {...form.getInputProps("duration")}
+              />
+            </>
+          )}
           <Textarea
             label="Comments"
             placeholder="Comments"
@@ -101,6 +135,7 @@ export default function AccountNew() {
           </Button>
         </SimpleGrid>
       </form>
+      {/* {JSON.stringify(form.values)} */}
     </Box>
   );
 }

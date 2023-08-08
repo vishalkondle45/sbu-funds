@@ -3,6 +3,7 @@ import connectDB from "../../middleware/mongodb";
 import Customer from "../../models/customer";
 import { authOptions } from "./auth/[...nextauth]";
 import Account from "@/models/account";
+import Share from "@/models/share";
 import Transaction from "@/models/transaction";
 
 const handler = async (req, res) => {
@@ -37,7 +38,7 @@ const handler = async (req, res) => {
       var rtgs = await Transaction.countDocuments({
         transaction_type: "RTGS",
       });
-
+      var { value } = await Share.findOne();
       // let xyz = await Transaction.aggregate([
       //   {
       //     $lookup: {
@@ -109,6 +110,7 @@ const handler = async (req, res) => {
           transfer,
           neft,
           rtgs,
+          share_value: value,
           // xyz,
         },
         message: "Customer fetched successfully",

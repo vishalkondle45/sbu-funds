@@ -8,6 +8,7 @@ import {
   Switch,
   SimpleGrid,
 } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
@@ -33,7 +34,7 @@ export default function CustomerNew() {
     validate: {
       name: (value) => (value.length > 3 ? null : "Enter valid name"),
       pan: (value) => (value.length === 10 ? null : "Enter valid pan"),
-      dob: (value) => (value.length === 10 ? null : "DD-MM-YYYY"),
+      dob: (value) => (value ? null : "Please select DOB"),
       aadhar: (value) => (value.length === 12 ? null : "Enter valid aadhar"),
       mobile: (value) => (value.length === 10 ? null : "Enter valid mobile"),
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Enter valid email"),
@@ -84,13 +85,12 @@ export default function CustomerNew() {
             minLength={10}
             maxLength={10}
           />
-          <TextInput
+          <DatePickerInput
             withAsterisk
             label="Date of Birth"
             placeholder="Date of Birth"
+            valueFormat="DD/MM/YYYY"
             {...form.getInputProps("dob")}
-            minLength={10}
-            maxLength={10}
           />
           <TextInput
             withAsterisk

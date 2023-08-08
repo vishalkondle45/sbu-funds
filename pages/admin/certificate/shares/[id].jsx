@@ -46,7 +46,7 @@ export default function Component() {
             title: "Invalid ID",
             message: "Please check customer id.",
           });
-          router.push("/admin");
+          router.push("/admin/home");
         });
     };
     if (router.query.id) {
@@ -95,11 +95,16 @@ export default function Component() {
         <Paper
           withBorder
           radius="xs"
-          py={16}
+          py={4}
           px={32}
           style={{ borderColor: "black" }}
         >
-          <div style={{ textAlign: "center", marginBottom: 15 }}>
+          <div
+            style={{
+              textAlign: "center",
+              // marginBottom: 15
+            }}
+          >
             <Group position="center">
               <Image src="/SBU-Final.png" width="100" />
               <Title order={2}>
@@ -107,8 +112,16 @@ export default function Component() {
                   SBU Mutual Benefit Funds Nidhi Limited
                 </Text>
               </Title>
+              <TextMB mb="-xs" mt="-xl">
+                1091, Sagar Chowk, Vidi Gharkul, Hyderabad Road, Solapur -
+                413005
+              </TextMB>
+              <Group mb="-xs" mt="-xs">
+                <TextMB>Registration No -</TextMB>
+                <TextM>U64990PN2023PLN219751</TextM>
+              </Group>
             </Group>
-            <Title order={3}>
+            <Title order={3} mt="xs">
               <Text ff="Times New Roman" size={23} fw={700}>
                 Shares Certificate
               </Text>
@@ -118,43 +131,63 @@ export default function Component() {
             <TextMB>Date -</TextMB>
             <TextM>{dayjs(new Date()).format("DD/MM/YYYY")}</TextM>
           </Group>
-          <Group position="right" mb="xl">
+          <Group
+            position="right"
+            // mb="xl"
+          >
             <TextMB>Certificate No -</TextMB>
             <TextM>{details.customerId}</TextM>
           </Group>
-          <Group position="apart" mb="xs">
+          <Group
+            position="apart"
+            // mb="xs"
+          >
             <Group>
               <TextMB>Name -</TextMB>
               <TextM>{details.name}</TextM>
             </Group>
           </Group>
+          <Group
+            position="apart"
+            // mb="xs"
+          >
+            <Group>
+              <TextMB>Address -</TextMB>
+              <TextM fz="sm">{details.address}</TextM>
+            </Group>
+          </Group>
           <Grid>
-            <Grid.Col span={6}>
-              <Group mb="xs">
+            <Grid.Col span={5}>
+              <Group>
                 <TextMB>Customer ID -</TextMB>
                 <TextM>{details.customerId}</TextM>
               </Group>
-              <Group mb="xs">
+              <Group>
                 <TextMB>Shares Count - </TextMB>
                 <TextM>{details.sharesCount}</TextM>
               </Group>
-              <Group mb="xs">
+              <Group>
                 <TextMB>Shares Value - </TextMB>
-                <TextM>{details.sharesValue}</TextM>
+                <TextM>₹{details.sharesValue}/-</TextM>
               </Group>
             </Grid.Col>
-            <Grid.Col span={6}>
-              <Group mb="xs">
+            <Grid.Col span={7}>
+              <Group>
                 <TextMB>Share Face Value -</TextMB>
-                <TextM>{details.sharesFaceValue}</TextM>
+                <TextM>₹{details.sharesFaceValue}/-</TextM>
               </Group>
-              <Group mb="xs">
+              <Group>
                 <TextMB>In Words - </TextMB>
-                <TextM>{toWords.convert(details.sharesCount) + " Only"}</TextM>
+                <TextM>
+                  {toWords.convert(details.sharesCount, { currency: false }) +
+                    " Only"}
+                </TextM>
               </Group>
-              <Group mb="xs">
+              <Group>
                 <TextMB>In Words - </TextMB>
-                <TextM>{toWords.convert(details.sharesValue) + " Only"}</TextM>
+                <TextM>
+                  {toWords.convert(details.sharesValue, { currency: true })}
+                </TextM>
               </Group>
             </Grid.Col>
           </Grid>

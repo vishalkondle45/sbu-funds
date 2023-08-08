@@ -18,7 +18,7 @@ import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import * as XLSX from "xlsx";
 
-export default function Transsactions() {
+export default function Interests() {
   const router = useRouter();
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);

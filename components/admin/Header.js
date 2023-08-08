@@ -10,8 +10,6 @@ import {
   rem,
   Image,
   Button,
-  Anchor,
-  Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/router";
@@ -110,7 +108,7 @@ const useStyles = createStyles((theme) => ({
 export default function HeaderComponent({
   links = [
     {
-      link: "/admin",
+      link: "/admin/home",
       label: "Home",
       icon: <IconHome2 />,
     },
@@ -156,8 +154,9 @@ export default function HeaderComponent({
       key={link.label}
       // href={link.link}
       className={cx(classes.link, {
-        [classes.linkActive]: active == link.link,
+        [classes.linkActive]: active?.includes(link.link),
       })}
+      style={{ padding: "10px" }}
       onClick={(event) => {
         event.preventDefault();
         setActive(link.link);
@@ -180,10 +179,10 @@ export default function HeaderComponent({
   ].map((link) => (
     <Button
       key={link.label}
-      // href={link.link}
       className={cx(classes.link, {
         [classes.linkActive]: active?.includes(link.link),
       })}
+      style={{ padding: "10px" }}
       onClick={(event) => {
         event.preventDefault();
         setActive(link.link);
@@ -200,7 +199,6 @@ export default function HeaderComponent({
   return (
     <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
       <Container className={classes.header}>
-        {/* <MantineLogo size={28} /> */}
         <Image src="../../../SBU-Final.png" width={100} />
         <Group spacing={5} className={classes.links}>
           {session ? items : items1}
@@ -224,14 +222,12 @@ export default function HeaderComponent({
             </Button>
           )}
         </Group>
-
         <Burger
           opened={opened}
           onClick={toggle}
           className={classes.burger}
           size="sm"
         />
-
         <Transition transition="pop-top-right" duration={200} mounted={opened}>
           {(styles) => (
             <Paper className={classes.dropdown} withBorder style={styles}>

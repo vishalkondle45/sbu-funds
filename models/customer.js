@@ -21,7 +21,7 @@ var customerSchema = new Schema(
       unique: true,
     },
     dob: {
-      type: String,
+      type: Date,
       required: true,
       trim: true,
     },

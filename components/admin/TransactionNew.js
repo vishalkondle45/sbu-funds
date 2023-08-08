@@ -5,6 +5,7 @@ import {
   Select,
   Textarea,
   NumberInput,
+  Text,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
@@ -15,6 +16,7 @@ import { useEffect, useState } from "react";
 
 export default function TransactionNew() {
   const [accountsList, setAccountsList] = useState([]);
+  const [isSeniorCitizen, setIsSeniorCitizen] = useState(false);
   const router = useRouter();
   const form = useForm({
     initialValues: {
@@ -80,6 +82,23 @@ export default function TransactionNew() {
     getAccountsList();
   }, []);
 
+  useEffect(() => {
+    const checkIsSeniorCitizen = async (id) => {
+      await axios
+        .get(`/api/isSeniorCitizen?account_number=${id}`)
+        .then((res) => {
+          // console.log(res.data);
+          setIsSeniorCitizen(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    if (form.values.to) {
+      checkIsSeniorCitizen(form.values.to);
+    }
+  }, [form.values.to]);
+
   return (
     <Box maw={300} mx="auto">
       <form onSubmit={form.onSubmit((values) => newTransaction(values))}>
@@ -108,6 +127,7 @@ export default function TransactionNew() {
             placeholder="Select To Account"
             {...form.getInputProps("to")}
           />
+          <Text color="red">{isSeniorCitizen && "Senior Citizen"}</Text>
           <NumberInput
             label="Amount"
             placeholder="Enter Amount"

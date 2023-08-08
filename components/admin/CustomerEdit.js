@@ -8,6 +8,7 @@ import {
   SimpleGrid,
   Select,
 } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { IconCheck, IconX } from "@tabler/icons-react";
@@ -35,7 +36,7 @@ export default function CustomerNew({ id }) {
     validate: {
       name: (value) => (value.length > 3 ? null : "Enter valid name"),
       pan: (value) => (value.length === 10 ? null : "Enter valid pan"),
-      dob: (value) => (value.length === 10 ? null : "DD-MM-YYYY"),
+      dob: (value) => (value ? null : "Select correct date"),
       aadhar: (value) =>
         String(value).length === 12 ? null : "Enter valid aadhar",
       mobile: (value) =>
@@ -60,7 +61,7 @@ export default function CustomerNew({ id }) {
         });
         router.push("/admin/customers");
       } else {
-        form.setValues(data.data);
+        form.setValues({ ...data.data, dob: new Date(data.data.dob) });
         form.setFieldValue("isAdmin", Boolean(data.data.isAdmin));
       }
     };
@@ -106,13 +107,12 @@ export default function CustomerNew({ id }) {
             minLength={10}
             maxLength={10}
           />
-          <TextInput
+          <DatePickerInput
             withAsterisk
             label="Date of Birth"
             placeholder="Date of Birth"
+            valueFormat="DD/MM/YYYY"
             {...form.getInputProps("dob")}
-            minLength={10}
-            maxLength={10}
           />
           <TextInput
             withAsterisk

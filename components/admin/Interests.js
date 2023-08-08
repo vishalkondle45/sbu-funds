@@ -18,132 +18,62 @@ import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import * as XLSX from "xlsx";
 
-export default function Transsactions() {
+export default function Interests() {
   const router = useRouter();
   const [value, setValue] = useState(null);
   const [data, setData] = useState([]);
-  const getTransactions = async () => {
+  const getInterests = async () => {
     handlers.open();
-    const { data } = await axios.post(`/api/transactions`);
+    const { data } = await axios.get(`/api/interest`);
     setData(data.data);
     handlers.close();
   };
   useEffect(() => {
-    getTransactions();
+    getInterests();
   }, []);
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "transaction_id",
-        header: "Transaction ID",
+        accessorKey: "id",
+        header: "Interest ID",
         size: 50,
       },
       {
-        accessorKey: "from",
-        header: "From",
-        size: 50,
-        Cell: ({ cell }) => (
-          <Text
-            fw={700}
-            // onMouseEnter={() => getCustomer(cell.getValue())}
-          >
-            {cell.getValue()}
-          </Text>
-        ),
-      },
-      {
-        accessorKey: "to",
-        header: "To",
-        size: 50,
-        Cell: ({ cell }) => (
-          <Text
-            fw={700}
-            // onMouseEnter={() => getCustomer(cell.getValue())}
-          >
-            {cell.getValue()}
-          </Text>
-        ),
-      },
-      {
-        accessorKey: "amount",
-        header: "Amount",
-        size: 50,
-        Cell: ({ row, cell }) => (
-          <Text
-            color={
-              (!row.original.to && "red") || (!row.original.from && "green")
-            }
-            fw={700}
-          >
-            {!row.original.to && "-"}
-            {!row.original.from && "+"}
-            {cell.getValue()?.toLocaleString("en-IN", {
-              style: "currency",
-              currency: "INR",
-            })}
-          </Text>
-        ),
-      },
-      {
-        accessorKey: "transaction_type",
-        header: "Type",
+        accessorKey: "from_days",
+        header: "From Days",
         size: 50,
       },
       {
-        accessorKey: "from_balance",
-        header: "From Balance",
+        accessorKey: "to_days",
+        header: "To Days",
         size: 50,
-        Cell: ({ row, cell }) => (
-          <Text
-            color={row.original.from_balance < 0 ? "red" : "green"}
-            fw={700}
-          >
-            {cell.getValue()?.toLocaleString("en-IN", {
-              style: "currency",
-              currency: "INR",
-            })}
-          </Text>
-        ),
       },
       {
-        accessorKey: "to_balance",
-        header: "To Balance",
-        size: 50,
-        Cell: ({ row, cell }) => (
-          <Text color={row.original.to_balance < 0 ? "red" : "green"} fw={700}>
-            {cell.getValue()?.toLocaleString("en-IN", {
-              style: "currency",
-              currency: "INR",
-            })}
-          </Text>
-        ),
-      },
-      {
-        accessorKey: "comments",
-        header: "Comments",
+        accessorKey: "interest",
+        header: "Interest",
         size: 50,
       },
       {
         accessorKey: "createdAt",
         header: "Date & Time",
-        Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY HH:mm A"),
+        Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY HH:MM"),
         size: 50,
       },
-      // {
-      //   accessorKey: "Updated At",
-      //   header: "updatedAt",
-      //   Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY"),
-      //   size: 50,
-      // },
+      {
+        accessorKey: "Updated At",
+        header: "updatedAt",
+        Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY HH:MM"),
+        size: 50,
+      },
     ],
     []
   );
 
-  const deleteTransaction = async (id) => {
+  const deleteInterest = async (id) => {
     handlers.open();
-    await axios.delete(`/api/transaction?id=${id}`);
-    getTransactions();
+    await axios.delete(`/api/interest?id=${id}`);
+    getInterests();
   };
 
   const openModal = (id) =>
@@ -151,7 +81,7 @@ export default function Transsactions() {
       title: `Do you really want to delete - ${id} ?`,
       labels: { confirm: "Confirm", cancel: "Cancel" },
       onCancel: () => console.log("Cancel"),
-      onConfirm: () => deleteTransaction(id),
+      onConfirm: () => deleteInterest(id),
     });
   const [visible, handlers] = useDisclosure(false);
 
@@ -182,10 +112,10 @@ export default function Transsactions() {
     );
     var wb = XLSX.utils.book_new();
     var ws = XLSX.utils.json_to_sheet(newData);
-    XLSX.utils.book_append_sheet(wb, ws, "Transactions");
+    XLSX.utils.book_append_sheet(wb, ws, "Interests");
     XLSX.writeFile(
       wb,
-      `Transactions - ${dayjs().format("DD-MM-YYYY HH:mm:ss")}.xlsx`
+      `Interests - ${dayjs().format("DD-MM-YYYY HH:mm:ss")}.xlsx`
     );
   };
 
@@ -206,10 +136,10 @@ export default function Transsactions() {
             <Button
               variant="filled"
               color="red"
-              onClick={() => router.push("/admin/transactions/new")}
+              onClick={() => router.push("/admin/interests/new")}
               leftIcon={<IconCirclePlus />}
             >
-              New Transaction
+              New Interest
             </Button>
             <FileInput
               placeholder="Import"
@@ -232,14 +162,12 @@ export default function Transsactions() {
         renderRowActionMenuItems={({ row }) => [
           <Menu.Item
             onClick={() =>
-              router.push(
-                `/admin/transactions/edit/${row.original.transaction_id}`
-              )
+              router.push(`/admin/interests/edit/${row.original.interest_id}`)
             }
           >
             Edit
           </Menu.Item>,
-          <Menu.Item onClick={() => openModal(row.original.transaction_id)}>
+          <Menu.Item onClick={() => openModal(row.original.interest_id)}>
             Delete
           </Menu.Item>,
         ]}

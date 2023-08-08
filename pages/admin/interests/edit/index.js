@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export default function Component() {
   const router = useRouter();
   useEffect(() => {
-    router.push("/admin/transactions");
+    router.push("/admin/interests");
   }, []);
   return (
     <>

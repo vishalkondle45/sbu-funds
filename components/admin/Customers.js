@@ -9,6 +9,7 @@ import {
   Group,
   LoadingOverlay,
   Menu,
+  Text,
   ThemeIcon,
   rem,
 } from "@mantine/core";
@@ -22,7 +23,6 @@ import {
 import { modals } from "@mantine/modals";
 import { useDisclosure } from "@mantine/hooks";
 import * as XLSX from "xlsx";
-import { notifications } from "@mantine/notifications";
 import { IconUpload } from "@tabler/icons-react";
 
 export default function Customers() {
@@ -62,6 +62,9 @@ export default function Customers() {
         accessorKey: "dob",
         header: "DOB",
         size: 50,
+        Cell: ({ cell }) => (
+          <Text>{dayjs(cell.getValue()).format("DD/MM/YYYY")}</Text>
+        ),
       },
       {
         accessorKey: "aadhar",
@@ -153,58 +156,6 @@ export default function Customers() {
       onConfirm: () => deleteCustomer(id),
     });
   const [visible, handlers] = useDisclosure(true);
-
-  const excelToJson = (file) => {
-    if (file) {
-      return new Promise((resolve, reject) => {
-        const xlsx = require("xlsx");
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const data = e.target.result;
-          const workbook = xlsx.read(data, { type: "array" });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const json = xlsx.utils.sheet_to_json(worksheet);
-          resolve(json);
-        };
-        reader.onerror = reject;
-        reader.readAsArrayBuffer(file);
-      });
-    }
-  };
-
-  const handleImport = async () => {
-    let JsonData = await excelToJson(value);
-    console.log(JsonData);
-    axios
-      .put("/api/import?table=customers", JsonData)
-      .then((response) => {
-        notifications.show({
-          message: response.data.message,
-          icon: <IconCheck />,
-          color: "green",
-          title: "Customers updated successfully ✌️",
-        });
-        console.log(response.data);
-        setValue(null);
-        getCustomers();
-      })
-      .catch((error) => {
-        console.log(error);
-        notifications.show({
-          message: error.response.data.message,
-          icon: <IconX />,
-          color: "red",
-          title: "Customers updated failed ✌️",
-        });
-      });
-  };
-
-  useEffect(() => {
-    if (value) {
-      handleImport();
-    }
-  }, [value]);
 
   const handleExport = () => {
     const newData = data.map(
