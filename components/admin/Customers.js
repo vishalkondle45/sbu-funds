@@ -188,7 +188,7 @@ export default function Customers() {
             <Group>
               <Button
                 variant="filled"
-                color="red"
+                // color="red"
                 onClick={() => router.push("/admin/customers/new")}
                 leftIcon={<IconCirclePlus />}
               >
@@ -234,7 +234,13 @@ export default function Customers() {
           >
             Delete
           </Menu.Item>,
-          <Menu.Item onClick={() => {}}>Certificate</Menu.Item>,
+          <Menu.Item
+            onClick={() =>
+              router.push(`/admin/certificate/shares/${row.original.id}`)
+            }
+          >
+            Certificate
+          </Menu.Item>,
         ]}
       />
     </Container>

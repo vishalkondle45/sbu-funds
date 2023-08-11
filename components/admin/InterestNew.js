@@ -17,7 +17,7 @@ export default function InterestNew() {
   const form = useForm({
     initialValues: {
       from_days: 1,
-      to_days: 0,
+      to_days: 1,
       interest: 0,
       comments: "",
     },
@@ -62,8 +62,9 @@ export default function InterestNew() {
             label="From Days"
             placeholder="Enter From Days"
             withAsterisk
-            {...form.getInputProps("from_days")}
             type="number"
+            min={1}
+            {...form.getInputProps("from_days")}
           />
           <NumberInput
             label="To Days"
@@ -71,13 +72,22 @@ export default function InterestNew() {
             withAsterisk
             {...form.getInputProps("to_days")}
             type="number"
+            min={1}
           />
           <NumberInput
-            label="Amount"
-            placeholder="Enter Amount"
+            label="Interest"
+            placeholder="Enter Interest"
             withAsterisk
             {...form.getInputProps("interest")}
-            precision={2}
+            // precision={2}
+            type="number"
+          />
+          <NumberInput
+            label="Interest"
+            placeholder="Enter Interest for Senior Citizen"
+            withAsterisk
+            {...form.getInputProps("interest60")}
+            // precision={2}
             type="number"
           />
           <Textarea

@@ -3,7 +3,9 @@ import EmailBanner from "@/components/Home/Email";
 import { FeaturesCards } from "@/components/Home/Features";
 import Header from "@/components/Home/Header";
 import Hero from "@/components/Home/Hero";
+import InterestRates from "@/components/Home/InterestRates";
 import LastFiveTransactions from "@/components/Home/LastFiveTransactions";
+import Slideshow from "@/components/Home/Slideshow";
 import { Container } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -31,8 +33,8 @@ export default function Component() {
         <>
           <Header />
           <Container>
-            <Hero />
-            <FeaturesCards />
+            <Slideshow />
+            <InterestRates />
             <EmailBanner />
           </Container>
         </>

@@ -127,6 +127,11 @@ export default function HeaderComponent({
       label: "Transactions",
       icon: <IconCoinRupee />,
     },
+    {
+      link: "/admin/interests",
+      label: "Interests",
+      icon: <IconCoinRupee />,
+    },
   ],
 }) {
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -199,7 +204,7 @@ export default function HeaderComponent({
   return (
     <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
       <Container className={classes.header}>
-        <Image src="../../../SBU-Final.png" width={100} />
+        <Image src="../../../Title_Logo.png" width={100} />
         <Group spacing={5} className={classes.links}>
           {session ? items : items1}
           {session && (

@@ -83,7 +83,7 @@ export default function AccountNew() {
       form.values.account_type === "Fixed Deposit" ||
       form.values.account_type === "Recurring Deposit"
     ) {
-      form.setFieldValue("duration", 60);
+      form.setFieldValue("duration", 365);
     } else {
       form.setFieldValue("duration", null);
     }
@@ -118,9 +118,10 @@ export default function AccountNew() {
             <>
               <TextInput
                 withAsterisk
-                label="Duration ( In Months )"
+                label="Duration ( In Days )"
                 type="number"
                 placeholder="Duration"
+                step={5}
                 {...form.getInputProps("duration")}
               />
             </>

@@ -10,6 +10,9 @@ import {
   Title,
   Image,
   Text,
+  Box,
+  Center,
+  BackgroundImage,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconEye, IconPrinter } from "@tabler/icons-react";
@@ -31,6 +34,7 @@ export default function Component() {
     sharesFaceValue: 0,
     sharesCount: 0,
     sharesValue: 0,
+    createdAt: new Date(),
   });
 
   useEffect(() => {
@@ -89,7 +93,9 @@ export default function Component() {
       <Container
         pt={"md"}
         size="sm"
-        style={{ fontFamily: "Times New Roman" }}
+        style={{
+          fontFamily: "Times New Roman",
+        }}
         id="certificate"
       >
         <Paper
@@ -97,23 +103,25 @@ export default function Component() {
           radius="xs"
           py={4}
           px={32}
-          style={{ borderColor: "black" }}
+          style={{ borderColor: "#4DABF7", borderWidth: "10px" }}
         >
-          <div
-            style={{
-              textAlign: "center",
-              // marginBottom: 15
-            }}
-          >
+          <div style={{ textAlign: "center" }}>
             <Group position="center">
-              <Image src="/SBU-Final.png" width="100" />
-              <Title order={2}>
-                <Text ff="Times New Roman" size={28} fw={700}>
-                  SBU Mutual Benefit Funds Nidhi Limited
-                </Text>
-              </Title>
-              <TextMB mb="-xs" mt="-xl">
-                1091, Sagar Chowk, Vidi Gharkul, Hyderabad Road, Solapur -
+              <Grid spacing="xs">
+                <Grid.Col span={1}>
+                  <Image
+                    src="/SBU-Logo-Final.png"
+                    style={{ width: 35, marginTop: 5 }}
+                  />
+                </Grid.Col>
+                <Grid.Col span={11}>
+                  <Text color="blue" ff="Times New Roman" size={30} fw={700}>
+                    SBU Mutual Benefit Funds Nidhi Ltd.
+                  </Text>
+                </Grid.Col>
+              </Grid>
+              <TextMB mb="-xs" fz="sm" mt="-xl">
+                Registered Add - 1091, Sagar Chowk, Vidi Gharkul, Solapur -
                 413005
               </TextMB>
               <Group mb="-xs" mt="-xs">
@@ -122,78 +130,77 @@ export default function Component() {
               </Group>
             </Group>
             <Title order={3} mt="xs">
-              <Text ff="Times New Roman" size={23} fw={700}>
+              <Text ff="Times New Roman" color="indigo" size={26} fw={700}>
                 Shares Certificate
               </Text>
             </Title>
           </div>
           <Group position="right">
-            <TextMB>Date -</TextMB>
-            <TextM>{dayjs(new Date()).format("DD/MM/YYYY")}</TextM>
+            <TextM fz={"sm"}>Date -</TextM>
+            <TextMB fz={"sm"}>
+              {dayjs(details.createdAt).format("DD/MM/YYYY")}
+            </TextMB>
           </Group>
-          <Group
-            position="right"
-            // mb="xl"
-          >
-            <TextMB>Certificate No -</TextMB>
-            <TextM>{details.customerId}</TextM>
+          <Group position="right">
+            <TextM fz={"sm"}>Certificate No -</TextM>
+            <TextMB fz={"sm"}>{details.customerId}</TextMB>
           </Group>
-          <Group
-            position="apart"
-            // mb="xs"
-          >
-            <Group>
-              <TextMB>Name -</TextMB>
-              <TextM>{details.name}</TextM>
-            </Group>
-          </Group>
-          <Group
-            position="apart"
-            // mb="xs"
-          >
-            <Group>
-              <TextMB>Address -</TextMB>
-              <TextM fz="sm">{details.address}</TextM>
-            </Group>
-          </Group>
+          <Grid grow gutter="xs">
+            <Grid.Col span={2}>
+              <TextM>Name -</TextM>
+              <TextM>Address -</TextM>
+            </Grid.Col>
+            <Grid.Col span={10}>
+              <TextMB>{details.name}</TextMB>
+              <TextMB>{details.address}</TextMB>
+            </Grid.Col>
+          </Grid>
           <Grid>
             <Grid.Col span={5}>
               <Group>
-                <TextMB>Customer ID -</TextMB>
-                <TextM>{details.customerId}</TextM>
+                <TextM>Customer ID -</TextM>
+                <TextMB>{details.customerId}</TextMB>
               </Group>
               <Group>
-                <TextMB>Shares Count - </TextMB>
-                <TextM>{details.sharesCount}</TextM>
+                <TextM>Shares Count - </TextM>
+                <TextMB>{details.sharesCount.toLocaleString("en-IN")}/-</TextMB>
               </Group>
               <Group>
-                <TextMB>Shares Value - </TextMB>
-                <TextM>₹{details.sharesValue}/-</TextM>
+                <TextM>Shares Value - </TextM>
+                <TextMB>
+                  Rs.
+                  {details.sharesValue.toLocaleString("en-IN")}
+                  /-
+                </TextMB>
               </Group>
             </Grid.Col>
             <Grid.Col span={7}>
               <Group>
-                <TextMB>Share Face Value -</TextMB>
-                <TextM>₹{details.sharesFaceValue}/-</TextM>
+                <TextM>Share Face Value -</TextM>
+                <TextMB>
+                  Rs.
+                  {details.sharesFaceValue.toLocaleString("en-IN")}/-
+                </TextMB>
               </Group>
               <Group>
-                <TextMB>In Words - </TextMB>
-                <TextM>
+                <TextM>In Words - </TextM>
+                <TextMB>
                   {toWords.convert(details.sharesCount, { currency: false }) +
                     " Only"}
-                </TextM>
+                </TextMB>
               </Group>
               <Group>
-                <TextMB>In Words - </TextMB>
-                <TextM>
+                <TextM>In Words - </TextM>
+                <TextMB>
                   {toWords.convert(details.sharesValue, { currency: true })}
-                </TextM>
+                </TextMB>
               </Group>
             </Grid.Col>
           </Grid>
-          <Group position="right" pt={80}>
+          <Group position="right" pt={100}>
             <TextMB>Authorized Signatory</TextMB>
           </Group>
+          {/* </BackgroundImage> */}
         </Paper>
       </Container>
     </>

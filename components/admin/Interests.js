@@ -36,35 +36,35 @@ export default function Interests() {
     () => [
       {
         accessorKey: "id",
-        header: "Interest ID",
-        size: 50,
+        header: "ID",
       },
       {
         accessorKey: "from_days",
         header: "From Days",
-        size: 50,
       },
       {
         accessorKey: "to_days",
         header: "To Days",
-        size: 50,
       },
       {
         accessorKey: "interest",
         header: "Interest",
-        size: 50,
+        Cell: ({ cell }) => <Text fw={700}>{cell.getValue()}%</Text>,
+      },
+      {
+        accessorKey: "interest60",
+        header: "Interest for Senior Citizens",
+        Cell: ({ cell }) => <Text fw={700}>{cell.getValue()}%</Text>,
       },
       {
         accessorKey: "createdAt",
         header: "Date & Time",
         Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY HH:MM"),
-        size: 50,
       },
       {
-        accessorKey: "Updated At",
-        header: "updatedAt",
+        accessorKey: "updatedAt",
+        header: "Updated At",
         Cell: ({ cell }) => dayjs(cell.getValue()).format("DD-MM-YYYY HH:MM"),
-        size: 50,
       },
     ],
     []
@@ -84,25 +84,6 @@ export default function Interests() {
       onConfirm: () => deleteInterest(id),
     });
   const [visible, handlers] = useDisclosure(false);
-
-  const excelToJson = (file) => {
-    if (file) {
-      return new Promise((resolve, reject) => {
-        const xlsx = require("xlsx");
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const data = e.target.result;
-          const workbook = xlsx.read(data, { type: "array" });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const json = xlsx.utils.sheet_to_json(worksheet);
-          resolve(json);
-        };
-        reader.onerror = reject;
-        reader.readAsArrayBuffer(file);
-      });
-    }
-  };
 
   const handleExport = () => {
     const newData = data.map(
@@ -135,7 +116,7 @@ export default function Interests() {
           <Group>
             <Button
               variant="filled"
-              color="red"
+              // color="red"
               onClick={() => router.push("/admin/interests/new")}
               leftIcon={<IconCirclePlus />}
             >
@@ -162,12 +143,12 @@ export default function Interests() {
         renderRowActionMenuItems={({ row }) => [
           <Menu.Item
             onClick={() =>
-              router.push(`/admin/interests/edit/${row.original.interest_id}`)
+              router.push(`/admin/interests/edit/${row.original.id}`)
             }
           >
             Edit
           </Menu.Item>,
-          <Menu.Item onClick={() => openModal(row.original.interest_id)}>
+          <Menu.Item onClick={() => openModal(row.original.id)}>
             Delete
           </Menu.Item>,
         ]}

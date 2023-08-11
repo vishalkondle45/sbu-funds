@@ -3,7 +3,7 @@ import React from "react";
 
 const TextMB = (props) => {
   return (
-    <Text fw={700} ff="monospace" {...props}>
+    <Text fw={700} ff="Times New Roman" {...props}>
       {props.children}
     </Text>
   );

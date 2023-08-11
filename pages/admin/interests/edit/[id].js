@@ -1,4 +1,4 @@
-import TransactionEdit from "@/components/admin/TransactionEdit";
+import InterestEdit from "@/components/admin/InterestEdit";
 import HeaderComponent from "@/components/admin/Header";
 import { useRouter } from "next/router";
 
@@ -7,7 +7,7 @@ export default function Component() {
   return (
     <>
       <HeaderComponent />
-      <TransactionEdit id={router.query.id} />
+      <InterestEdit id={router.query.id} />
     </>
   );
 }

@@ -47,7 +47,7 @@ export default function FooterSocial() {
     <div className={classes.footer}>
       <Container className={classes.inner}>
         {/* <MantineLogo size={28} /> */}
-        <Image src="./SBU-Final.png" width={100} />
+        <Image src="./Title_Logo.png" width={100} />
         <Group spacing={0} className={classes.links} position="right" noWrap>
           <ActionIcon size="lg">
             <IconBrandTwitter size="1.05rem" stroke={1.5} />

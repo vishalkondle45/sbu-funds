@@ -7,10 +7,6 @@ var interestSchema = new Schema(
       type: Number,
       required: true,
     },
-    // account_type: {
-    //   type: String,
-    //   required: true,
-    // },
     from_days: {
       type: Number,
       required: true,
@@ -20,6 +16,10 @@ var interestSchema = new Schema(
       required: true,
     },
     interest: {
+      type: Number,
+      required: true,
+    },
+    interest60: {
       type: Number,
       required: true,
     },

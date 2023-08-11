@@ -4,6 +4,34 @@ import connectDB from "../../middleware/mongodb";
 import Interest from "../../models/interest";
 
 const handler = async (req, res) => {
+  if (req.method === "GET") {
+    try {
+      let interest;
+      if (req.query?.days) {
+        interest = await Interest.findOne({
+          from_days: { $lte: req.query.days },
+          to_days: { $gte: req.query.days },
+        });
+      } else if (req.query.id) {
+        interest = await Interest.findOne({ id: req.query.id });
+      } else {
+        interest = await Interest.find();
+      }
+      return res.status(200).json({
+        error: false,
+        ok: true,
+        data: interest,
+        message: "Interest fetched successfully",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        error: true,
+        ok: false,
+        data: error.message,
+        message: "Error while fetching interest",
+      });
+    }
+  }
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user?.isAdmin) {
     return res
@@ -31,32 +59,6 @@ const handler = async (req, res) => {
         ok: false,
         data: error.message,
         message: "Error while creating interest",
-      });
-    }
-  }
-  if (req.method === "GET") {
-    try {
-      let interest;
-      if (req.query?.days) {
-        interest = await Interest.find({
-          from_days: { $lte: req.query.days },
-          to_days: { $gte: req.query.days },
-        });
-      } else {
-        interest = await Interest.find();
-      }
-      return res.status(200).json({
-        error: false,
-        ok: true,
-        data: interest,
-        message: "Interest fetched successfully",
-      });
-    } catch (error) {
-      return res.status(500).json({
-        error: true,
-        ok: false,
-        data: error.message,
-        message: "Error while fetching interest",
       });
     }
   }

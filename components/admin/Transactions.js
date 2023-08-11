@@ -205,7 +205,7 @@ export default function Transsactions() {
           <Group>
             <Button
               variant="filled"
-              color="red"
+              // color="red"
               onClick={() => router.push("/admin/transactions/new")}
               leftIcon={<IconCirclePlus />}
             >

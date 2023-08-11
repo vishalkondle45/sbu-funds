@@ -17,15 +17,16 @@ export default function App({
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <link rel="icon" type="image/x-icon" href="/SBU-Circle.png" />
+        <link rel="icon" type="image/x-icon" href="/Round_Logo.png" />
       </Head>
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS
         theme={{
-          /** Put your mantine theme override here */
           colorScheme: "light",
-          primaryColor: "red",
+          primaryColor: "blue",
+          loader: "bars",
+          activeStyles: { transform: "scale(0.95)" },
         }}
       >
         <SessionProvider session={session}>

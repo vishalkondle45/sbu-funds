@@ -182,7 +182,7 @@ export default function HeaderComponent() {
     <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
       <Container className={classes.header}>
         {/* <MantineLogo size={28} /> */}
-        <Image src="./SBU-Final.png" width={100} />
+        <Image src="./Title_Logo.png" width={100} />
         <Group spacing={5} className={classes.links}>
           {session ? (
             <>

@@ -1,130 +1,199 @@
+import TextM from "@/components/Certificate/TextM";
+import TextMB from "@/components/Certificate/TextMB";
 import HeaderComponent from "@/components/admin/Header";
 import {
-  Box,
+  Button,
   Container,
-  // Image,
+  Grid,
+  Group,
   Paper,
-  SimpleGrid,
-  Table,
+  Title,
+  Image,
   Text,
+  Box,
+  Center,
+  BackgroundImage,
 } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { IconEye, IconPrinter } from "@tabler/icons-react";
+import axios from "axios";
+import dayjs from "dayjs";
+import jsPDF from "jspdf";
+// import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ToWords } from "to-words";
 
 export default function Component() {
   const router = useRouter();
+  const toWords = new ToWords();
+
+  const [details, setDetails] = useState({
+    name: "",
+    customerId: 0,
+    sharesFaceValue: 0,
+    sharesCount: 0,
+    sharesValue: 0,
+    createdAt: new Date(),
+  });
 
   useEffect(() => {
-    const getFDCertificate = () => {};
-    // getFDCertificate(req.query.id);
-    console.log(router.query.id);
+    const getDetails = async (id) => {
+      await axios
+        .get(`/api/certificate/shares/${id}`)
+        .then((res) => {
+          setDetails((details) => ({ ...details, ...res.data }));
+        })
+        .catch((err) => {
+          console.log(err);
+          showNotification({
+            title: "Invalid ID",
+            message: "Please check customer id.",
+          });
+          router.push("/admin/home");
+        });
+    };
+    if (router.query.id) {
+      getDetails(router.query.id);
+    }
   }, [router.query]);
+
+  function printPDF() {
+    let doc = new jsPDF("p", "pt", "a4");
+    doc.html(document.getElementById("certificate"), {
+      html2canvas: {
+        scale: 600 / document.getElementById("certificate").scrollWidth,
+      },
+      callback: (pdf) => pdf.save("Certifate.pdf"),
+      marginTop: 10,
+    });
+  }
+  function openPDF() {
+    let doc = new jsPDF("p", "pt", "a4");
+    doc.html(document.getElementById("certificate"), {
+      html2canvas: {
+        scale: 600 / document.getElementById("certificate").scrollWidth,
+      },
+      callback: (pdf) => window.open(pdf.output("bloburl")),
+      marginTop: 10,
+    });
+  }
 
   return (
     <>
       <HeaderComponent />
-      <Container size="sm" style={{ fontFamily: "Times New Roman" }}>
-        <Box style={{ textAlign: "center" }}>
-          <h1>SBU Mutual Benefit Funds Nidhi Limited</h1>
-          <h5>
-            Registered Address - 1091, C1 Group, Sagar Chowk, Vidi
-            Gharkul,Hyderabad Road, Solapur - 413005
-          </h5>
-          <h5>Registration No - U64990PN2023PLN219751</h5>
-          <h2>Fixed Deposit Certificate</h2>
-        </Box>
-        <Table striped withBorder withColumnBorders>
-          <thead>
-            <tr>
-              <th>
-                <Text style={{ fontFamily: "Times New Roman" }}>
-                  Account Number
+      <Group position="center">
+        <Button leftIcon={<IconPrinter size="1rem" />} onClick={printPDF}>
+          Print
+        </Button>
+        <Button leftIcon={<IconEye size="1rem" />} onClick={openPDF}>
+          View
+        </Button>
+      </Group>
+      <Container
+        pt={"md"}
+        size="sm"
+        style={{
+          fontFamily: "Times New Roman",
+        }}
+        id="certificate"
+      >
+        <Paper
+          withBorder
+          radius="xs"
+          py={4}
+          px={32}
+          style={{ borderColor: "#4DABF7", borderWidth: "10px" }}
+        >
+          <div style={{ textAlign: "center" }}>
+            <Group position="center">
+              <Group position="apart" spacing="xs">
+                <Image id="title_logo" src="/Title_Logo.png" width="100" />
+                <Text ff="Times New Roman" size={30} fw={700}>
+                  SBU Mutual Benefit Funds Nidhi Ltd.
                 </Text>
-              </th>
-              <th>
-                <Text style={{ fontFamily: "Times New Roman" }}>Amount</Text>
-              </th>
-              <th>
-                <Text style={{ fontFamily: "Times New Roman" }}>
-                  Interest Rate
-                </Text>
-              </th>
-              <th>
-                <Text style={{ fontFamily: "Times New Roman" }}>Period</Text>
-              </th>
-              <th>
-                <Text style={{ fontFamily: "Times New Roman" }}>
-                  Start Date
-                </Text>
-              </th>
-              <th>
-                <Text style={{ fontFamily: "Times New Roman" }}>
-                  Maturity Date
-                </Text>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <Text style={{ fontFamily: "Times New Roman" }}>1111</Text>
-              </td>
-              <td>
-                <Text style={{ fontFamily: "Times New Roman" }}>10000</Text>
-              </td>
-              <td>
-                <Text style={{ fontFamily: "Times New Roman" }}>9%</Text>
-              </td>
-              <td>
-                <Text style={{ fontFamily: "Times New Roman" }}>
-                  120 Months
-                </Text>
-              </td>
-              <td>
-                <Text style={{ fontFamily: "Times New Roman" }}>
-                  05-08-2023
-                </Text>
-              </td>
-              <td>
-                <Text style={{ fontFamily: "Times New Roman" }}>
-                  05-08-2033
-                </Text>
-              </td>
-            </tr>
-          </tbody>
-        </Table>
-        <Paper mt="xs" radius="xs" p="md" withBorder>
-          <Text style={{ fontFamily: "Times New Roman" }}>
-            One Lakh Rupees Only
-          </Text>
-        </Paper>
-
-        <Paper mt="xs" radius="xs" p="md" withBorder>
-          <SimpleGrid cols={2}>
-            <Text style={{ fontFamily: "Times New Roman" }}>Received From</Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>
-              : Vishal Shridhar Kondle
-              <Text style={{ fontFamily: "Times New Roman" }}>
-                1492, G Group Vidi Gharkul Hyderabad Road Solapur
+              </Group>
+              <TextMB mb="-xs" fz="sm" mt="-xl">
+                Regd. Add-1091, C1 Group, Sagar Chowk, Vidi Gharkul, Hyderabad
+                Road, Solapur - 413005
+              </TextMB>
+              <Group mb="-xs" mt="-xs">
+                <TextMB>Registration No -</TextMB>
+                <TextM>U64990PN2023PLN219751</TextM>
+              </Group>
+            </Group>
+            <Title order={3} mt="xs">
+              <Text ff="Times New Roman" color="blue" size={23} fw={700}>
+                Shares Certificate
               </Text>
-            </Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>Customer ID</Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>: 111</Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>Date of Issue</Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>: 05-08-2023</Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>
-              Interest Calculation Method
-            </Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>
-              : Compound Interest at Quarterly Rests
-            </Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>
-              Maturity Amount
-            </Text>
-            <Text style={{ fontFamily: "Times New Roman" }}>
-              : Rs. 24, 352.00
-            </Text>
-          </SimpleGrid>
+            </Title>
+          </div>
+          <Group position="right">
+            <TextM fz={"sm"}>Date -</TextM>
+            <TextMB fz={"sm"}>
+              {dayjs(details.createdAt).format("DD/MM/YYYY")}
+            </TextMB>
+          </Group>
+          <Group position="right">
+            <TextM fz={"sm"}>Certificate No -</TextM>
+            <TextMB fz={"sm"}>{details.customerId}</TextMB>
+          </Group>
+          <Grid grow gutter="xs">
+            <Grid.Col span={2}>
+              <TextM>Name -</TextM>
+              <TextM>Address -</TextM>
+            </Grid.Col>
+            <Grid.Col span={10}>
+              <TextMB>{details.name}</TextMB>
+              <TextMB>{details.address}</TextMB>
+            </Grid.Col>
+          </Grid>
+          <Grid>
+            <Grid.Col span={5}>
+              <Group>
+                <TextM>Customer ID -</TextM>
+                <TextMB>{details.customerId}</TextMB>
+              </Group>
+              <Group>
+                <TextM>Shares Count - </TextM>
+                <TextMB>{details.sharesCount.toLocaleString("en-IN")}/-</TextMB>
+              </Group>
+              <Group>
+                <TextM>Shares Value - </TextM>
+                <TextMB>
+                  Rs.
+                  {details.sharesValue.toLocaleString("en-IN")}
+                  /-
+                </TextMB>
+              </Group>
+            </Grid.Col>
+            <Grid.Col span={7}>
+              <Group>
+                <TextM>Share Face Value -</TextM>
+                <TextMB>
+                  Rs.
+                  {details.sharesFaceValue.toLocaleString("en-IN")}/-
+                </TextMB>
+              </Group>
+              <Group>
+                <TextM>In Words - </TextM>
+                <TextMB>
+                  {toWords.convert(details.sharesCount, { currency: false }) +
+                    " Only"}
+                </TextMB>
+              </Group>
+              <Group>
+                <TextM>In Words - </TextM>
+                <TextMB>
+                  {toWords.convert(details.sharesValue, { currency: true })}
+                </TextMB>
+              </Group>
+            </Grid.Col>
+          </Grid>
+          <Group position="right" pt={80}>
+            <TextMB>Authorized Signatory</TextMB>
+          </Group>
+          {/* </BackgroundImage> */}
         </Paper>
       </Container>
     </>

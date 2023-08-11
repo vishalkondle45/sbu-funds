@@ -32,7 +32,7 @@ export default function CustomerNew() {
       isAdmin: false,
     },
     validate: {
-      name: (value) => (value.length > 3 ? null : "Enter valid name"),
+      name: (value) => (value.length >= 3 ? null : "Enter valid name"),
       pan: (value) => (value.length === 10 ? null : "Enter valid pan"),
       dob: (value) => (value ? null : "Please select DOB"),
       aadhar: (value) => (value.length === 12 ? null : "Enter valid aadhar"),
@@ -40,8 +40,8 @@ export default function CustomerNew() {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Enter valid email"),
       password: (value) => (value.length > 7 ? null : "Enter min 8 characters"),
       address: (value) => (value.length > 10 ? null : "Enter valid address"),
-      nominee: (value) => (value.length > 3 ? null : "Enter valid nominee"),
-      relation: (value) => (value.length > 3 ? null : "Enter valid relation"),
+      nominee: (value) => (value.length >= 3 ? null : "Enter valid nominee"),
+      relation: (value) => (value.length >= 3 ? null : "Enter valid relation"),
     },
   });
 

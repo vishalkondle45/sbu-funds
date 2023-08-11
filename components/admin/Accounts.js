@@ -113,7 +113,7 @@ export default function Accounts() {
           <Group>
             <Button
               variant="filled"
-              color="red"
+              // color="red"
               onClick={() => router.push("/admin/accounts/new")}
               leftIcon={<IconCirclePlus />}
             >
