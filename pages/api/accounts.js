@@ -49,6 +49,7 @@ const handler = async (req, res) => {
             account_number: 1,
             customer_id: 1,
             account_type: 1,
+            duration: 1,
             comments: 1,
             createdAt: 1,
             updatedAt: 1,

@@ -9,6 +9,7 @@ import {
   Group,
   LoadingOverlay,
   Menu,
+  Text,
   rem,
 } from "@mantine/core";
 import { useRouter } from "next/router";
@@ -47,6 +48,12 @@ export default function Accounts() {
     {
       accessorKey: "account_type",
       header: "Acc. Type",
+      size: 50,
+    },
+    {
+      accessorKey: "duration",
+      header: "Duration",
+      Cell: ({ cell }) => <Text>{cell.getValue() + " Days"}</Text>,
       size: 50,
     },
     {
