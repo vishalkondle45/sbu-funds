@@ -19,14 +19,14 @@ const handler = async (req, res) => {
         account_number: (accounts[0]?.account_number || 1110) + 1,
       });
       await account.save();
-      // var accounts = await Account.find();
+      var accounts = await Account.find();
       return res.status(200).json({
         error: false,
         ok: true,
-        // data: accounts,
-        // message: `Account Number - ${
-        //   accounts[accounts.length - 1].account_number
-        // }`,
+        data: accounts,
+        message: `Account Number - ${
+          accounts[accounts.length - 1].account_number
+        }`,
       });
     } catch (error) {
       return res.status(500).json({

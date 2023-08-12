@@ -39,6 +39,9 @@ const handler = async (req, res) => {
         transaction_type: "RTGS",
       });
       var { value } = await Share.findOne();
+      let [{ amount }] = await Transaction.aggregate([
+        { $group: { _id: null, amount: { $sum: "$amount" } } },
+      ]);
       // let xyz = await Transaction.aggregate([
       //   {
       //     $lookup: {
@@ -111,6 +114,7 @@ const handler = async (req, res) => {
           neft,
           rtgs,
           share_value: value,
+          amount,
           // xyz,
         },
         message: "Customer fetched successfully",

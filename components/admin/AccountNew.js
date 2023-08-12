@@ -121,7 +121,7 @@ export default function AccountNew() {
                 label="Duration ( In Days )"
                 type="number"
                 placeholder="Duration"
-                step={5}
+                // step={5}
                 {...form.getInputProps("duration")}
               />
             </>

@@ -12,7 +12,7 @@ const handler = async (req, res) => {
   }
   if (req.method === "POST") {
     try {
-      var customers = await Customer.find(req.body.filters);
+      var customers = await Customer.find(req.body.filters).sort({ id: -1 });
       return res.status(200).json({
         error: false,
         ok: true,

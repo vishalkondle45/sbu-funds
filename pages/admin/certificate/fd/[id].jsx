@@ -10,16 +10,12 @@ import {
   Title,
   Image,
   Text,
-  Box,
-  Center,
-  BackgroundImage,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { IconEye, IconPrinter } from "@tabler/icons-react";
 import axios from "axios";
 import dayjs from "dayjs";
 import jsPDF from "jspdf";
-// import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ToWords } from "to-words";
@@ -31,16 +27,19 @@ export default function Component() {
   const [details, setDetails] = useState({
     name: "",
     customerId: 0,
-    sharesFaceValue: 0,
-    sharesCount: 0,
-    sharesValue: 0,
+    amount: 0,
+    account_number: 0,
+    period: 0,
+    interest: 0,
+    maturityAmount: 0,
+    maturityDate: new Date(),
     createdAt: new Date(),
   });
 
   useEffect(() => {
     const getDetails = async (id) => {
       await axios
-        .get(`/api/certificate/shares/${id}`)
+        .get(`/api/certificate/fd/${id}`)
         .then((res) => {
           setDetails((details) => ({ ...details, ...res.data }));
         })
@@ -102,20 +101,27 @@ export default function Component() {
           withBorder
           radius="xs"
           py={4}
-          px={32}
+          px={16}
           style={{ borderColor: "#4DABF7", borderWidth: "10px" }}
         >
           <div style={{ textAlign: "center" }}>
             <Group position="center">
-              <Group position="apart" spacing="xs">
-                <Image id="title_logo" src="/Title_Logo.png" width="100" />
-                <Text ff="Times New Roman" size={30} fw={700}>
-                  SBU Mutual Benefit Funds Nidhi Ltd.
-                </Text>
-              </Group>
+              <Grid spacing="xs">
+                <Grid.Col span={1}>
+                  <Image
+                    src="/SBU-Logo-Final.png"
+                    style={{ width: 35, marginTop: 5 }}
+                  />
+                </Grid.Col>
+                <Grid.Col span={11}>
+                  <Text color="blue" ff="Times New Roman" size={30} fw={700}>
+                    SBU Mutual Benefit Funds Nidhi Ltd.
+                  </Text>
+                </Grid.Col>
+              </Grid>
               <TextMB mb="-xs" fz="sm" mt="-xl">
-                Regd. Add-1091, C1 Group, Sagar Chowk, Vidi Gharkul, Hyderabad
-                Road, Solapur - 413005
+                Registered Add - 1091, Sagar Chowk, Vidi Gharkul, Solapur -
+                413005
               </TextMB>
               <Group mb="-xs" mt="-xs">
                 <TextMB>Registration No -</TextMB>
@@ -123,74 +129,82 @@ export default function Component() {
               </Group>
             </Group>
             <Title order={3} mt="xs">
-              <Text ff="Times New Roman" color="blue" size={23} fw={700}>
-                Shares Certificate
+              <Text ff="Times New Roman" color="grape" size={23} fw={700}>
+                Fixed Deposit Certificate
               </Text>
             </Title>
           </div>
           <Group position="right">
-            <TextM fz={"sm"}>Date -</TextM>
+            <TextM fz={"sm"}>Date of Deposit -</TextM>
             <TextMB fz={"sm"}>
               {dayjs(details.createdAt).format("DD/MM/YYYY")}
             </TextMB>
           </Group>
           <Group position="right">
             <TextM fz={"sm"}>Certificate No -</TextM>
-            <TextMB fz={"sm"}>{details.customerId}</TextMB>
+            <TextMB fz={"sm"}>{details.account_number}</TextMB>
           </Group>
           <Grid grow gutter="xs">
             <Grid.Col span={2}>
-              <TextM>Name -</TextM>
-              <TextM>Address -</TextM>
+              <TextM>Received From-</TextM>
+              {/* <TextM>Customer ID-</TextM> */}
             </Grid.Col>
             <Grid.Col span={10}>
               <TextMB>{details.name}</TextMB>
-              <TextMB>{details.address}</TextMB>
+              {/* <TextMB>{details.address}</TextMB> */}
             </Grid.Col>
           </Grid>
           <Grid>
             <Grid.Col span={5}>
               <Group>
-                <TextM>Customer ID -</TextM>
-                <TextMB>{details.customerId}</TextMB>
+                <TextM size="sm">Customer ID - </TextM>
+                <TextMB size="sm">{details.customerId}</TextMB>
               </Group>
               <Group>
-                <TextM>Shares Count - </TextM>
-                <TextMB>{details.sharesCount.toLocaleString("en-IN")}/-</TextMB>
+                <TextM size="sm">Deposit Amount - </TextM>
+                <TextMB size="sm">
+                  Rs. {details.amount.toLocaleString("en-IN")}/-
+                </TextMB>
               </Group>
-              <Group>
-                <TextM>Shares Value - </TextM>
-                <TextMB>
-                  Rs.
-                  {details.sharesValue.toLocaleString("en-IN")}
+              <Group spacing={"xs"}>
+                <TextM size="sm">Maturity Amount - </TextM>
+                <TextMB size="sm">
+                  Rs. {details.maturityAmount.toLocaleString("en-IN")}
                   /-
+                </TextMB>
+              </Group>
+              <Group spacing={"xs"}>
+                <TextM size="sm">Maturity Date - </TextM>
+                <TextMB size="sm">
+                  {dayjs(details.maturityDate).format("DD-MM-YYYY")}
                 </TextMB>
               </Group>
             </Grid.Col>
             <Grid.Col span={7}>
-              <Group>
-                <TextM>Share Face Value -</TextM>
-                <TextMB>
-                  Rs.
-                  {details.sharesFaceValue.toLocaleString("en-IN")}/-
-                </TextMB>
+              <Group spacing={"xs"}>
+                <TextM size="sm">Account Number - </TextM>
+                <TextMB size="sm">{details.account_number}</TextMB>
               </Group>
-              <Group>
-                <TextM>In Words - </TextM>
-                <TextMB>
-                  {toWords.convert(details.sharesCount, { currency: false }) +
+              <Group spacing={"xs"}>
+                <TextM size="sm">In Words - </TextM>
+                <TextMB size="sm">
+                  {toWords.convert(details.amount, { currency: false }) +
                     " Only"}
                 </TextMB>
               </Group>
-              <Group>
-                <TextM>In Words - </TextM>
-                <TextMB>
-                  {toWords.convert(details.sharesValue, { currency: true })}
+              <Group spacing={"xs"}>
+                <TextM size="sm">In Words - </TextM>
+                <TextMB size="sm">
+                  {toWords.convert(details.maturityAmount, { currency: true })}
                 </TextMB>
+              </Group>
+              <Group spacing={"xs"}>
+                <TextM size="sm">Interest Rate - </TextM>
+                <TextMB size="sm">{details.interest.toFixed(2)}%</TextMB>
               </Group>
             </Grid.Col>
           </Grid>
-          <Group position="right" pt={80}>
+          <Group position="right" pt={100}>
             <TextMB>Authorized Signatory</TextMB>
           </Group>
           {/* </BackgroundImage> */}

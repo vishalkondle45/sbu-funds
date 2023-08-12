@@ -7,6 +7,8 @@ import {
   NumberInput,
   SimpleGrid,
   Select,
+  Radio,
+  Group,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -20,32 +22,38 @@ export default function CustomerNew({ id }) {
   const form = useForm({
     initialValues: {
       name: "",
-      pan: "",
-      dob: "",
-      aadhar: "",
-      mobile: "",
-      email: "",
-      password: "",
       address: "",
+      pan: "",
+      aadhar: "",
+      email: "",
+      mobile: "",
+      dob: new Date(),
+      gender: "Male",
+      occupation: "",
+      income: "",
       nominee: "",
       relation: "",
+      nominee_dob: new Date(),
+      mother: "",
+      category: "",
       shares: 1,
+      password: "",
       comments: "",
       isAdmin: false,
     },
     validate: {
-      name: (value) => (value.length >= 3 ? null : "Enter valid name"),
-      pan: (value) => (value.length === 10 ? null : "Enter valid pan"),
-      dob: (value) => (value ? null : "Select correct date"),
-      aadhar: (value) =>
-        String(value).length === 12 ? null : "Enter valid aadhar",
-      mobile: (value) =>
-        String(value).length === 10 ? null : "Enter valid mobile",
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Enter valid email"),
-      password: (value) => (value.length > 7 ? null : "Enter min 8 characters"),
-      address: (value) => (value.length > 10 ? null : "Enter valid address"),
-      nominee: (value) => (value.length >= 3 ? null : "Enter valid nominee"),
-      relation: (value) => (value.length >= 3 ? null : "Enter valid relation"),
+      // name: (value) => (value.length >= 3 ? null : "Enter valid name"),
+      // pan: (value) => (value.length === 10 ? null : "Enter valid pan"),
+      // dob: (value) => (value ? null : "Select correct date"),
+      // aadhar: (value) =>
+      //   String(value).length === 12 ? null : "Enter valid aadhar",
+      // mobile: (value) =>
+      //   String(value).length === 10 ? null : "Enter valid mobile",
+      // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Enter valid email"),
+      // password: (value) => (value.length > 7 ? null : "Enter min 8 characters"),
+      // address: (value) => (value.length > 10 ? null : "Enter valid address"),
+      // nominee: (value) => (value.length >= 3 ? null : "Enter valid nominee"),
+      // relation: (value) => (value.length >= 3 ? null : "Enter valid relation"),
     },
   });
   const router = useRouter();
@@ -61,7 +69,13 @@ export default function CustomerNew({ id }) {
         });
         router.push("/admin/customers");
       } else {
-        form.setValues({ ...data.data, dob: new Date(data.data.dob) });
+        form.setValues({
+          ...data.data,
+          dob: data.data.dob ? new Date(data.data.dob) : new Date(),
+          nominee_dob: data.data.nominee_dob
+            ? new Date(data.data.nominee_dob)
+            : new Date(),
+        });
         form.setFieldValue("isAdmin", Boolean(data.data.isAdmin));
       }
     };
@@ -134,6 +148,41 @@ export default function CustomerNew({ id }) {
             placeholder="Password"
             {...form.getInputProps("password")}
           />
+          <Radio.Group
+            label="Gender"
+            withAsterisk
+            {...form.getInputProps("gender")}
+          >
+            <Group mt="xs">
+              <Radio value="Male" label="Male" />
+              <Radio value="Female" label="Female" />
+            </Group>
+          </Radio.Group>
+          <Select
+            withAsterisk
+            label="Category"
+            placeholder="Category"
+            data={[
+              "Savings Account",
+              "Loan Account",
+              "Fixed Deposit",
+              "Recurring Deposit",
+              "Others",
+            ]}
+            {...form.getInputProps("category")}
+          />
+          <TextInput
+            withAsterisk
+            label="Occupation"
+            placeholder="Occupation"
+            {...form.getInputProps("occupation")}
+          />
+          <TextInput
+            withAsterisk
+            label="Income"
+            placeholder="Income"
+            {...form.getInputProps("income")}
+          />
           <Textarea
             withAsterisk
             label="Address"
@@ -141,7 +190,6 @@ export default function CustomerNew({ id }) {
             {...form.getInputProps("address")}
           />
           <Textarea
-            withAsterisk
             label="Comments"
             placeholder="Comments"
             {...form.getInputProps("comments")}
@@ -158,13 +206,26 @@ export default function CustomerNew({ id }) {
             placeholder="Relation"
             {...form.getInputProps("relation")}
           />
+          <DatePickerInput
+            withAsterisk
+            label="Nominee DOB"
+            placeholder="Nominee DOB"
+            valueFormat="DD/MM/YYYY"
+            {...form.getInputProps("nominee_dob")}
+          />
+          <TextInput
+            withAsterisk
+            label="Mother"
+            placeholder="Mother"
+            {...form.getInputProps("mother")}
+          />
           <TextInput
             withAsterisk
             label="Mobile Number"
             placeholder="Mobile"
+            {...form.getInputProps("mobile")}
             minLength={10}
             maxLength={10}
-            {...form.getInputProps("mobile")}
           />
           <NumberInput
             withAsterisk

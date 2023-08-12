@@ -152,7 +152,15 @@ export default function Accounts() {
               Delete
             </Menu.Item>
             {row.original.account_type === "Fixed Deposit" && (
-              <Menu.Item onClick={() => {}}>Certificate</Menu.Item>
+              <Menu.Item
+                onClick={() =>
+                  router.push(
+                    `/admin/certificate/fd/${row.original.account_number}`
+                  )
+                }
+              >
+                Certificate
+              </Menu.Item>
             )}
           </>
         )}

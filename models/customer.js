@@ -13,17 +13,16 @@ var customerSchema = new Schema(
       type: String,
       required: true,
     },
+    address: {
+      type: String,
+      required: true,
+    },
     pan: {
       type: String,
       required: true,
       minlength: 10,
       maxlength: 10,
       unique: true,
-    },
-    dob: {
-      type: Date,
-      required: true,
-      trim: true,
     },
     aadhar: {
       type: Number,
@@ -32,24 +31,35 @@ var customerSchema = new Schema(
       maxlength: 12,
       unique: true,
     },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     mobile: {
       type: Number,
       required: true,
       minlength: 10,
       maxlength: 10,
     },
-    email: {
-      type: String,
+    dob: {
+      type: Date,
       required: true,
-      unique: true,
+      trim: true,
     },
-    password: {
+    gender: {
       type: String,
       required: true,
+      default: "Male",
+      enum: ["Male", "Female"],
     },
-    address: {
+    occupation: {
       type: String,
-      required: true,
+      required: false,
+    },
+    income: {
+      type: String,
+      required: false,
     },
     nominee: {
       type: String,
@@ -58,10 +68,34 @@ var customerSchema = new Schema(
     relation: {
       type: String,
       required: true,
-      // enum: ["Mother", "Father", "Sister", "Brother", "Husband"],
+    },
+    nominee_dob: {
+      type: Date,
+      required: true,
+      trim: false,
+    },
+    mother: {
+      type: String,
+      required: false,
+    },
+    catogory: {
+      type: String,
+      required: true,
+      default: "Others",
+      enum: [
+        "Savings Account",
+        "Loan Account",
+        "Fixed Deposit",
+        "Recurring Deposit",
+        "Others",
+      ],
     },
     shares: {
       type: Number,
+      required: true,
+    },
+    password: {
+      type: String,
       required: true,
     },
     comments: {

@@ -7,6 +7,10 @@ import {
   NumberInput,
   Switch,
   SimpleGrid,
+  Radio,
+  Group,
+  Select,
+  Container,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -18,30 +22,43 @@ export default function CustomerNew() {
   const form = useForm({
     initialValues: {
       name: "",
-      pan: "",
-      dob: "",
-      aadhar: "",
-      mobile: "",
-      email: "",
-      password: "",
       address: "",
+      pan: "",
+      aadhar: "",
+      email: "",
+      mobile: "",
+      dob: "",
+      gender: "Male",
+      occupation: "",
+      income: "",
       nominee: "",
       relation: "",
+      nominee_dob: "",
+      mother: "",
+      category: "",
       shares: 1,
+      password: "",
       comments: "",
       isAdmin: false,
     },
     validate: {
-      name: (value) => (value.length >= 3 ? null : "Enter valid name"),
-      pan: (value) => (value.length === 10 ? null : "Enter valid pan"),
-      dob: (value) => (value ? null : "Please select DOB"),
-      aadhar: (value) => (value.length === 12 ? null : "Enter valid aadhar"),
-      mobile: (value) => (value.length === 10 ? null : "Enter valid mobile"),
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Enter valid email"),
-      password: (value) => (value.length > 7 ? null : "Enter min 8 characters"),
-      address: (value) => (value.length > 10 ? null : "Enter valid address"),
-      nominee: (value) => (value.length >= 3 ? null : "Enter valid nominee"),
-      relation: (value) => (value.length >= 3 ? null : "Enter valid relation"),
+      // name: (value) => (value ? null : "Enter valid name"),
+      // address: (value) => (value ? null : "Enter valid address"),
+      // pan: (value) => (value.length === 10 ? null : "Enter valid pan"),
+      // aadhar: (value) => (value.length === 12 ? null : "Enter valid aadhar"),
+      // email: (value) => (/^\S+@\S+$/.test(value) ? null : "Enter valid email"),
+      // mobile: (value) => (value.length === 10 ? null : "Enter valid mobile"),
+      // dob: (value) => (value ? null : "Please select DOB"),
+      // gender: (value) => (value ? null : "Please select Gender"),
+      // occupation: (value) => (value ? null : "Please select Occupation"),
+      // income: (value) => (value ? null : "Please select Income"),
+      // nominee: (value) => (value ? null : "Please select Nominee"),
+      // relation: (value) => (value ? null : "Enter valid relation"),
+      // // nominee_dob: (value) => (value ? null : "Enter valid Nominee DOB"),
+      // mother: (value) => (value ? null : "Enter valid mother"),
+      // catogry: (value) => (value ? null : "Enter valid catogry"),
+      // shares: (value) => (value ? null : "Enter valid Shares"),
+      // password: (value) => (value ? null : "Enter valid password"),
     },
   });
 
@@ -68,9 +85,9 @@ export default function CustomerNew() {
   };
 
   return (
-    <Box maw={500} mx="auto">
+    <Box maw={900} mx="auto">
       <form onSubmit={form.onSubmit((values) => newCustomer(values))}>
-        <SimpleGrid cols={2}>
+        <SimpleGrid cols={3}>
           <TextInput
             withAsterisk
             label="Name"
@@ -112,6 +129,41 @@ export default function CustomerNew() {
             placeholder="Password"
             {...form.getInputProps("password")}
           />
+          <Radio.Group
+            label="Gender"
+            withAsterisk
+            {...form.getInputProps("gender")}
+          >
+            <Group mt="xs">
+              <Radio value="Male" label="Male" />
+              <Radio value="Female" label="Female" />
+            </Group>
+          </Radio.Group>
+          <Select
+            withAsterisk
+            label="Category"
+            placeholder="Category"
+            data={[
+              "Savings Account",
+              "Loan Account",
+              "Fixed Deposit",
+              "Recurring Deposit",
+              "Others",
+            ]}
+            {...form.getInputProps("category")}
+          />
+          <TextInput
+            withAsterisk
+            label="Occupation"
+            placeholder="Occupation"
+            {...form.getInputProps("occupation")}
+          />
+          <TextInput
+            withAsterisk
+            label="Income"
+            placeholder="Income"
+            {...form.getInputProps("income")}
+          />
           <Textarea
             withAsterisk
             label="Address"
@@ -134,6 +186,19 @@ export default function CustomerNew() {
             label="Relation"
             placeholder="Relation"
             {...form.getInputProps("relation")}
+          />
+          <DatePickerInput
+            withAsterisk
+            label="Nominee DOB"
+            placeholder="Nominee DOB"
+            valueFormat="DD/MM/YYYY"
+            {...form.getInputProps("nominee_dob")}
+          />
+          <TextInput
+            withAsterisk
+            label="Mother"
+            placeholder="Mother"
+            {...form.getInputProps("mother")}
           />
           <TextInput
             withAsterisk

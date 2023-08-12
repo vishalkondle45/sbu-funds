@@ -54,6 +54,7 @@ const handler = async (req, res) => {
             updatedAt: 1,
           },
         },
+        { $sort: { account_number: -1 } },
       ]);
 
       return res.status(200).json({
