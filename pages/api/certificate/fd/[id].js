@@ -33,15 +33,19 @@ const handler = async (req, res) => {
           },
         ],
       });
+
       let interestRate =
         dayjs(new Date()).diff(customer.dob, "years") <= 60
           ? interest.interest
           : interest.interest60;
+
       let maturityAmount =
-        transaction.to_balance + transaction.to_balance * (interestRate / 100);
+        transaction.to_balance +
+        ((transaction.to_balance * (interestRate / 100)) / 365) *
+          account.duration;
 
       let maturityDate = dayjs(transaction.createdAt).add(
-        account.duration,
+        account.duration + 1,
         "days"
       );
 
@@ -53,7 +57,8 @@ const handler = async (req, res) => {
         interest: interestRate,
         account_number: account.account_number,
         maturityDate,
-        maturityAmount,
+        maturityAmount: Number(maturityAmount.toFixed(2)),
+        createdAt: transaction.createdAt,
       });
     } catch (error) {
       return res.status(500).json({

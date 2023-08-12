@@ -181,30 +181,36 @@ export default function Component() {
               </Group>
             </Grid.Col>
             <Grid.Col span={7}>
-              <Group spacing={"xs"}>
+              <Group spacing={"xs"} ml="-xs">
                 <TextM size="sm">Account Number - </TextM>
                 <TextMB size="sm">{details.account_number}</TextMB>
               </Group>
-              <Group spacing={"xs"}>
-                <TextM size="sm">In Words - </TextM>
-                <TextMB size="sm">
-                  {toWords.convert(details.amount, { currency: false }) +
-                    " Only"}
-                </TextMB>
-              </Group>
-              <Group spacing={"xs"}>
-                <TextM size="sm">In Words - </TextM>
-                <TextMB size="sm">
-                  {toWords.convert(details.maturityAmount, { currency: true })}
-                </TextMB>
-              </Group>
-              <Group spacing={"xs"}>
+              <Grid grow gutter="xs">
+                <Grid.Col span={2} ml="-xs">
+                  <TextM size="xs">In Words-</TextM>
+                  <TextM size="xs">In Words-</TextM>
+                </Grid.Col>
+                <Grid.Col span={10}>
+                  <TextMB size="sm">
+                    {toWords.convert(details.amount, { currency: false }) +
+                      " Only"}
+                  </TextMB>
+                  <TextMB size="sm">
+                    {toWords.convert(details.maturityAmount, {
+                      currency: true,
+                    })}
+                  </TextMB>
+                </Grid.Col>
+              </Grid>
+              <Group spacing={"xs"} ml="-xs">
                 <TextM size="sm">Interest Rate - </TextM>
-                <TextMB size="sm">{details.interest.toFixed(2)}%</TextMB>
+                <TextMB size="sm">
+                  {details.interest.toFixed(2)}% (per annum)
+                </TextMB>
               </Group>
             </Grid.Col>
           </Grid>
-          <Group position="right" pt={100}>
+          <Group position="right" pt={90}>
             <TextMB>Authorized Signatory</TextMB>
           </Group>
           {/* </BackgroundImage> */}
