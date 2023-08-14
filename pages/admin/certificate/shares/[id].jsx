@@ -163,7 +163,7 @@ export default function Component() {
               </Group>
               <Group>
                 <TextM>Shares Count - </TextM>
-                <TextMB>{details.sharesCount.toLocaleString("en-IN")}/-</TextMB>
+                <TextMB>{details.sharesCount.toLocaleString("en-IN")}</TextMB>
               </Group>
               <Group>
                 <TextM>Shares Value - </TextM>

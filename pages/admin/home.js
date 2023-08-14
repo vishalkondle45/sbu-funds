@@ -17,7 +17,8 @@ export default function Page() {
       transfer,
       neft,
       rtgs,
-      share_value,
+      // share_value,
+      shares,
     },
     setCount,
   ] = useState({});
@@ -50,7 +51,8 @@ export default function Page() {
         <DashboardItem title="Transfer" count={transfer} />
         <DashboardItem title="NEFT" count={neft} />
         <DashboardItem title="RTGS" count={rtgs} />
-        <DashboardItem title="Share Value" count={share_value} />
+        {/* <DashboardItem title="Share Value" count={share_value} /> */}
+        <DashboardItem title="Shares Count" count={shares} />
       </SimpleGrid>
     </>
   );
