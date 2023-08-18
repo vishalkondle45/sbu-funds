@@ -1,6 +1,6 @@
 import Header from "@/components/Home/Header";
 import Transsactions from "@/components/Home/Transactions";
-import { Container, Select } from "@mantine/core";
+import { Container } from "@mantine/core";
 import { useSession } from "next-auth/react";
 
 export default function Component() {

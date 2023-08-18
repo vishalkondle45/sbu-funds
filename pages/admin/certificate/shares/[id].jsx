@@ -15,7 +15,7 @@ import {
   BackgroundImage,
 } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import { IconEye, IconPrinter } from "@tabler/icons-react";
+import { IconDownload, IconEye, IconPrinter } from "@tabler/icons-react";
 import axios from "axios";
 import dayjs from "dayjs";
 import jsPDF from "jspdf";
@@ -83,11 +83,11 @@ export default function Component() {
     <>
       <HeaderComponent />
       <Group position="center">
-        <Button leftIcon={<IconPrinter size="1rem" />} onClick={printPDF}>
-          Print
+        <Button leftIcon={<IconDownload size="1rem" />} onClick={printPDF}>
+          Save
         </Button>
-        <Button leftIcon={<IconEye size="1rem" />} onClick={openPDF}>
-          View
+        <Button leftIcon={<IconPrinter size="1rem" />} onClick={openPDF}>
+          Print
         </Button>
       </Group>
       <Container

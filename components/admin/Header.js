@@ -19,6 +19,7 @@ import {
   IconHome2,
   IconLogin,
   IconPigMoney,
+  IconReceipt,
   IconUserCircle,
 } from "@tabler/icons-react";
 import { IconLogout } from "@tabler/icons-react";
@@ -128,6 +129,11 @@ export default function HeaderComponent({
       icon: <IconCoinRupee />,
     },
     {
+      link: "/admin/statement",
+      label: "Statement",
+      icon: <IconReceipt />,
+    },
+    {
       link: "/admin/interests",
       label: "Interests",
       icon: <IconCoinRupee />,
@@ -203,7 +209,7 @@ export default function HeaderComponent({
 
   return (
     <Header height={HEADER_HEIGHT} mb={10} className={classes.root}>
-      <Container className={classes.header}>
+      <Container className={classes.header} size="lg">
         <Image src="../../../Title_Logo.png" width={100} />
         <Group spacing={5} className={classes.links}>
           {session ? items : items1}

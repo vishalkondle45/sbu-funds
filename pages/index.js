@@ -6,7 +6,7 @@ import Hero from "@/components/Home/Hero";
 import InterestRates from "@/components/Home/InterestRates";
 import LastFiveTransactions from "@/components/Home/LastFiveTransactions";
 import Slideshow from "@/components/Home/Slideshow";
-import { Container } from "@mantine/core";
+import { Button, Container } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -27,6 +27,10 @@ export default function Component() {
     //   router.push("/");
     // }
   }
+
+  const getStatement = async () => {
+    await axios.get(`/api/statement/${1111}?from=${new Date()}`);
+  };
   return (
     <>
       {status !== "authenticated" ? (
@@ -44,6 +48,7 @@ export default function Component() {
             <>
               <Header />
               <Container>
+                <Button onClick={getStatement}>Get Statement</Button>
                 <LastFiveTransactions />
               </Container>
             </>
