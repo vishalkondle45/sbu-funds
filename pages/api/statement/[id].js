@@ -3,9 +3,8 @@ import connectDB from "@/middleware/mongodb";
 import Customer from "@/models/customer";
 import Account from "@/models/account";
 import Transaction from "@/models/transaction";
-import { authOptions } from "../auth/[...nextauth]";
-import Interest from "@/models/interest";
-import dayjs from "dayjs";
+// import { authOptions } from "../auth/[...nextauth]";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);

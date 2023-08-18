@@ -117,7 +117,8 @@ export default function Component() {
         <Paper
           withBorder
           radius="xs"
-          py={4}
+          pt={8}
+          pb={16}
           px={16}
           style={{ borderColor: "#4DABF7", borderWidth: "4px" }}
         >
@@ -129,12 +130,14 @@ export default function Component() {
           <List withPadding spacing="xs" style={{ fontFamily: "monospace" }}>
             <List.Item>
               Account Name &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;:{" "}
-              <span style={{ fontWeight: 700 }}>{details?.customer?.name}</span>
+              <span style={{ fontWeight: 700, letterSpacing: "1px" }}>
+                {details?.customer?.name}
+              </span>
             </List.Item>
             <List.Item>
               Address
               &emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;:{" "}
-              <span style={{ fontWeight: 700 }}>
+              <span style={{ fontWeight: 700, letterSpacing: "1px" }}>
                 {details?.customer?.address}
               </span>
             </List.Item>
@@ -142,25 +145,25 @@ export default function Component() {
               Date
               &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
               :{" "}
-              <span style={{ fontWeight: 700 }}>
+              <span style={{ fontWeight: 700, letterSpacing: "1px" }}>
                 {dayjs().format("DD MMM YYYY")}
               </span>
             </List.Item>
             <List.Item>
               Account Number &emsp;&nbsp;&emsp;&emsp;&emsp;:{" "}
-              <span style={{ fontWeight: 700 }}>
+              <span style={{ fontWeight: 700, letterSpacing: "1px" }}>
                 {details?.account?.account_number}
               </span>
             </List.Item>
             <List.Item>
               Account Description :{" "}
-              <span style={{ fontWeight: 700 }}>
+              <span style={{ fontWeight: 700, letterSpacing: "1px" }}>
                 {details?.account?.account_type}
               </span>
             </List.Item>
             <List.Item>
               Balance({dayjs().format("DD-MM-YYYY")}) :{" "}
-              <span style={{ fontWeight: 700 }}>
+              <span style={{ fontWeight: 700, letterSpacing: "1px" }}>
                 {details?.balance?.toLocaleString("en-IN", {
                   maximumFractionDigits: 2,
                   currency: "INR",
