@@ -21,14 +21,16 @@ const handler = async (req, res) => {
         createdAt: { $gte: req.query.from, $lte: req.query.to },
         $or: [{ to: req.query.id }, { from: req.query.id }],
       });
-      var transaction = await Transaction.findOne({
+      var transaction = await Transaction.find({
         $or: [{ to: req.query.id }, { from: req.query.id }],
-      }).sort("-created_at");
-      var balance = transaction
-        ? transaction.to == req.query.id
-          ? transaction.to_balance
-          : transaction.from_balance
+      }).sort("-createdAt");
+
+      var balance = transaction[0]
+        ? transaction[0].to == req.query.id
+          ? transaction[0].to_balance
+          : transaction[0].from_balance
         : 0;
+
       return res.status(200).json({
         transaction,
         customer,
