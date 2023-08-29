@@ -120,7 +120,7 @@ export default function Component() {
           pt={8}
           pb={16}
           px={16}
-          style={{ borderColor: "#4DABF7", borderWidth: "4px" }}
+          // style={{ borderColor: "#4DABF7", borderWidth: "4px" }}
         >
           <Grid spacing="xs">
             <Grid.Col span={2}>
